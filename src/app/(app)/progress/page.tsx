@@ -5,7 +5,7 @@ import { db } from "@/lib/db";
 import { addDays, dayKey, formatDay } from "@/lib/dates";
 import { liveStreak } from "@/lib/progress";
 import { requireUser } from "@/lib/session";
-import { TOPICS, getProblem, problems, topicName } from "@/problems";
+import { ACTIVE_TOPICS, TOPICS, getProblem, topicName } from "@/problems";
 
 export const metadata: Metadata = { title: "Progress" };
 
@@ -64,7 +64,7 @@ export default async function ProgressPage() {
   const activeDays = cells.filter((c) => c.level > 0).length;
 
   const masteryOf = new Map(mastery.map((m) => [m.topic, m]));
-  const available = TOPICS.filter((t) => problems.some((p) => p.topic === t.id));
+  const available = ACTIVE_TOPICS;
   const focus = available.find((t) => (masteryOf.get(t.id)?.score ?? 0) < 70)?.id;
 
   const trend = scored.slice(-14).map((s) => s.assessment!.thinkingScore);

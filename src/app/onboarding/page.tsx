@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Logo } from "@/components/AppHeader";
 import { db } from "@/lib/db";
 import { requireUser } from "@/lib/session";
-import { TOPICS } from "@/problems";
+import { ACTIVE_TOPICS } from "@/problems";
 import { saveOnboarding } from "./actions";
 
 export const metadata: Metadata = { title: "Get started" };
@@ -105,7 +105,7 @@ export default async function OnboardingPage() {
               How comfortable are you with each topic?
             </h2>
             <p className="m-0 mb-2 text-muted">1 = never seen it · 5 = can solve mediums on my own</p>
-            {TOPICS.slice(0, 8).map((t) => (
+            {ACTIVE_TOPICS.map((t) => (
               <fieldset key={t.id} className="m-0 flex flex-wrap items-center gap-x-4 gap-y-2 border-0 border-t border-line-soft px-0 py-2">
                 <legend className="sr-only">{t.name}</legend>
                 <span aria-hidden="true" className="flex-[1_1_160px]">

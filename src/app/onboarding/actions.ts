@@ -4,13 +4,13 @@ import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
 import { dayKey } from "@/lib/dates";
 import { getUser } from "@/lib/session";
-import { TOPICS } from "@/problems";
+import { ACTIVE_TOPICS } from "@/problems";
 
 export async function saveOnboarding(form: FormData) {
   const user = await getUser();
   if (!user) redirect("/signin");
 
-  const ratings = TOPICS.slice(0, 8).map((t) => ({
+  const ratings = ACTIVE_TOPICS.map((t) => ({
     topic: t.id,
     rating: Math.min(5, Math.max(1, Number(form.get(`rate-${t.id}`)) || 1)),
   }));

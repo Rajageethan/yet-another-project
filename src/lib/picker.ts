@@ -2,7 +2,7 @@ import "server-only";
 import { db } from "@/lib/db";
 import { dayKey } from "@/lib/dates";
 import type { AppUser } from "@/lib/session";
-import { DIFFICULTY_LEVEL, TOPICS, getProblem, problems, type Language } from "@/problems";
+import { ACTIVE_TOPICS, DIFFICULTY_LEVEL, getProblem, problems, type Language } from "@/problems";
 
 function seeded(seed: string) {
   let h = 2166136261;
@@ -29,7 +29,7 @@ async function pickProblem(user: AppUser, date: string, exclude: string[] = []) 
   const due = new Set(reviews.filter((r) => r.dueDate <= date).map((r) => r.problemSlug));
 
   // The first roadmap topic (that has problems) the student hasn't got comfortable with yet.
-  const available = TOPICS.filter((t) => problems.some((p) => p.topic === t.id));
+  const available = ACTIVE_TOPICS;
   const focusIdx = Math.max(
     0,
     available.findIndex((t) => (masteryOf.get(t.id) ?? 0) < 70),

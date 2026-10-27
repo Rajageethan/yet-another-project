@@ -57,6 +57,9 @@ export const DIFFICULTY_LEVEL: Record<Difficulty, number> = { easy: 1, medium: 2
 /** Hand-written bank (scripts/problems.py) plus imports approved on /admin/review. */
 export const problems = [...(bank as Problem[]), ...(imported as unknown as Problem[])];
 
+/** Roadmap topics that have at least one problem, in roadmap order. */
+export const ACTIVE_TOPICS = TOPICS.filter((t) => problems.some((p) => p.topic === t.id));
+
 const bySlug = new Map(problems.map((p) => [p.slug, p]));
 
 export function getProblem(slug: string): Problem {
