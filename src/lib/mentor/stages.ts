@@ -56,6 +56,16 @@ export function stageIndex(id: string) {
   return Math.max(0, STAGE_IDS.indexOf(id as StageId));
 }
 
+/**
+ * The stage after a mentor turn. Unprompted turns (failed-run or paste follow-ups) never move it;
+ * otherwise it may go back freely but forward only one stage, so the bar can't skip ahead.
+ */
+export function nextStage(current: string, proposed: StageId | null, unprompted: boolean): StageId {
+  const from = stageIndex(current);
+  if (!proposed || unprompted) return STAGE_IDS[from];
+  return STAGE_IDS[Math.min(stageIndex(proposed), from + 1)];
+}
+
 export function getStage(id: string) {
   return STAGES[stageIndex(id)];
 }

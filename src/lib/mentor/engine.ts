@@ -7,13 +7,14 @@ import { getProblem } from "@/problems";
 import type { Session } from "@/generated/prisma/client";
 import { WINDOW, historyMessages, workspaceBlock } from "./context";
 import { HINT_LEVELS, hintInstruction, systemPrompt } from "./prompt";
-import { STAGE_IDS, type StageId } from "./stages";
+import { STAGE_IDS, nextStage, type StageId } from "./stages";
 
 export type MentorInput =
   | { kind: "start" }
   | { kind: "message"; text: string }
   | { kind: "hint" }
   | { kind: "run_failed" }
+  | { kind: "pasted" }
   | { kind: "retry" };
 
 export type MentorEvent =
@@ -132,9 +133,10 @@ async function runTurn(user: AppUser, session: Session, input: MentorInput, send
     ({ text, stage } = await streamReply(llm, messages, send));
   }
 
-  if (stage && stage !== session.stage) {
-    session = await db.session.update({ where: { id: session.id }, data: { stage } });
-    send({ type: "stage", stage });
+  const moved = nextStage(session.stage, stage, input.kind === "run_failed" || input.kind === "pasted");
+  if (moved !== session.stage) {
+    session = await db.session.update({ where: { id: session.id }, data: { stage: moved } });
+    send({ type: "stage", stage: moved });
   }
 
   const highlights = lineMentions(text, Math.max(1, session.code.replace(/\s+$/, "").split("\n").length));
