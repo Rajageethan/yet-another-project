@@ -1,0 +1,144 @@
+{
+ "id": "lc-69",
+ "status": "pending",
+ "source": {
+  "dataset": "newfacade/LeetCodeDataset",
+  "license": "Apache-2.0",
+  "questionId": 69,
+  "taskId": "sqrtx",
+  "tags": [
+   "Math",
+   "Binary Search"
+  ]
+ },
+ "difficulty": "easy",
+ "topic": "binary-search",
+ "functionName": {
+  "python": "my_sqrt",
+  "javascript": "mySqrt"
+ },
+ "params": [
+  "x"
+ ],
+ "compare": "exact",
+ "tests": [
+  {
+   "args": [
+    30
+   ],
+   "expected": 5
+  },
+  {
+   "args": [
+    225
+   ],
+   "expected": 15
+  },
+  {
+   "args": [
+    144
+   ],
+   "expected": 12
+  }
+ ],
+ "hiddenTests": [
+  {
+   "args": [
+    4
+   ],
+   "expected": 2
+  },
+  {
+   "args": [
+    8
+   ],
+   "expected": 2
+  },
+  {
+   "args": [
+    25
+   ],
+   "expected": 5
+  },
+  {
+   "args": [
+    15
+   ],
+   "expected": 3
+  },
+  {
+   "args": [
+    101
+   ],
+   "expected": 10
+  },
+  {
+   "args": [
+    361
+   ],
+   "expected": 19
+  },
+  {
+   "args": [
+    121
+   ],
+   "expected": 11
+  },
+  {
+   "args": [
+    1025
+   ],
+   "expected": 32
+  },
+  {
+   "args": [
+    4096
+   ],
+   "expected": 64
+  },
+  {
+   "args": [
+    131072
+   ],
+   "expected": 362
+  },
+  {
+   "args": [
+    2097152
+   ],
+   "expected": 1448
+  },
+  {
+   "args": [
+    16777216
+   ],
+   "expected": 4096
+  },
+  {
+   "args": [
+    499999999
+   ],
+   "expected": 22360
+  },
+  {
+   "args": [
+    2147483646
+   ],
+   "expected": 46340
+  },
+  {
+   "args": [
+    141421356237
+   ],
+   "expected": 376060
+  }
+ ],
+ "verification": {
+  "datasetCases": 67,
+  "parsedCases": 60,
+  "agreedCases": 60,
+  "secondSolution": true
+ },
+ "referenceSolution": "class Solution:\n    def mySqrt(self, x: int) -> int:\n        l, r = 0, x\n        while l < r:\n            mid = (l + r + 1) >> 1\n            if mid > x // mid:\n                r = mid - 1\n            else:\n                l = mid\n        return l\n",
+ "draft": null
+}

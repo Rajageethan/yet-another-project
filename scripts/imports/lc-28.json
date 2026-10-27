@@ -1,0 +1,164 @@
+{
+ "id": "lc-28",
+ "status": "pending",
+ "source": {
+  "dataset": "newfacade/LeetCodeDataset",
+  "license": "Apache-2.0",
+  "questionId": 28,
+  "taskId": "find-the-index-of-the-first-occurrence-in-a-string",
+  "tags": [
+   "Two Pointers",
+   "String",
+   "String Matching"
+  ]
+ },
+ "difficulty": "easy",
+ "topic": "two-pointers",
+ "functionName": {
+  "python": "str_str",
+  "javascript": "strStr"
+ },
+ "params": [
+  "haystack",
+  "needle"
+ ],
+ "compare": "exact",
+ "tests": [
+  {
+   "args": [
+    "aaaaaaab",
+    "aaaab"
+   ],
+   "expected": 3
+  },
+  {
+   "args": [
+    "abracadabra",
+    "abra"
+   ],
+   "expected": 0
+  },
+  {
+   "args": [
+    "abababababab",
+    "bababa"
+   ],
+   "expected": 1
+  }
+ ],
+ "hiddenTests": [
+  {
+   "args": [
+    "",
+    ""
+   ],
+   "expected": 0
+  },
+  {
+   "args": [
+    "abcdefg",
+    ""
+   ],
+   "expected": 0
+  },
+  {
+   "args": [
+    "abcde",
+    "abcde"
+   ],
+   "expected": 0
+  },
+  {
+   "args": [
+    "mississippi",
+    "pi"
+   ],
+   "expected": 9
+  },
+  {
+   "args": [
+    "ababababab",
+    "abab"
+   ],
+   "expected": 0
+  },
+  {
+   "args": [
+    "bananananana",
+    "anan"
+   ],
+   "expected": 1
+  },
+  {
+   "args": [
+    "aaaaaaaaaab",
+    "aaaaaab"
+   ],
+   "expected": 4
+  },
+  {
+   "args": [
+    "abcdefghij",
+    "jihgfedcba"
+   ],
+   "expected": -1
+  },
+  {
+   "args": [
+    "abababababababab",
+    "ababab"
+   ],
+   "expected": 0
+  },
+  {
+   "args": [
+    "xxyyzzxxyyzzxxyyzz",
+    "xxyyzz"
+   ],
+   "expected": 0
+  },
+  {
+   "args": [
+    "oneonetwoonetwothree",
+    "twone"
+   ],
+   "expected": -1
+  },
+  {
+   "args": [
+    "almosttherealmost",
+    "almostthere"
+   ],
+   "expected": 0
+  },
+  {
+   "args": [
+    "thisisaverylonghaystack",
+    "averylong"
+   ],
+   "expected": 6
+  },
+  {
+   "args": [
+    "thisisaverylongstringforsearching",
+    "searching"
+   ],
+   "expected": 24
+  },
+  {
+   "args": [
+    "thisisaverylonghaystackthatcontainsavariablesubstring",
+    "substring"
+   ],
+   "expected": 44
+  }
+ ],
+ "verification": {
+  "datasetCases": 144,
+  "parsedCases": 144,
+  "agreedCases": 144,
+  "secondSolution": true
+ },
+ "referenceSolution": "class Solution:\n    def strStr(self, haystack: str, needle: str) -> int:\n        n, m = len(haystack), len(needle)\n        for i in range(n - m + 1):\n            if haystack[i : i + m] == needle:\n                return i\n        return -1\n",
+ "draft": null
+}

@@ -1,0 +1,169 @@
+{
+ "id": "lc-8",
+ "status": "pending",
+ "source": {
+  "dataset": "newfacade/LeetCodeDataset",
+  "license": "Apache-2.0",
+  "questionId": 8,
+  "taskId": "string-to-integer-atoi",
+  "tags": [
+   "String"
+  ]
+ },
+ "difficulty": "medium",
+ "topic": "arrays-hashing",
+ "functionName": {
+  "python": "my_atoi",
+  "javascript": "myAtoi"
+ },
+ "params": [
+  "s"
+ ],
+ "compare": "exact",
+ "tests": [
+  {
+   "args": [
+    "words with 42"
+   ],
+   "expected": 0
+  },
+  {
+   "args": [
+    "-2147483649"
+   ],
+   "expected": -2147483648
+  },
+  {
+   "args": [
+    "   -2147483649"
+   ],
+   "expected": -2147483648
+  }
+ ],
+ "hiddenTests": [
+  {
+   "args": [
+    ""
+   ],
+   "expected": 0
+  },
+  {
+   "args": [
+    "-+12"
+   ],
+   "expected": 0
+  },
+  {
+   "args": [
+    "  +0 123"
+   ],
+   "expected": 0
+  },
+  {
+   "args": [
+    "    0000+123"
+   ],
+   "expected": 0
+  },
+  {
+   "args": [
+    "   !@#$%^&*()_+"
+   ],
+   "expected": 0
+  },
+  {
+   "args": [
+    "-21474836489"
+   ],
+   "expected": -2147483648
+  },
+  {
+   "args": [
+    "    +2147483647"
+   ],
+   "expected": 2147483647
+  },
+  {
+   "args": [
+    "  0000000000000   -123abc"
+   ],
+   "expected": 0
+  },
+  {
+   "args": [
+    "00000000000123456789"
+   ],
+   "expected": 123456789
+  },
+  {
+   "args": [
+    "    214748364700000000"
+   ],
+   "expected": 2147483647
+  },
+  {
+   "args": [
+    "    -2147483648000000000"
+   ],
+   "expected": -2147483648
+  },
+  {
+   "args": [
+    "    -214748364800000000000000"
+   ],
+   "expected": -2147483648
+  },
+  {
+   "args": [
+    "    21474836470000000000000000000000"
+   ],
+   "expected": 2147483647
+  },
+  {
+   "args": [
+    "    -21474836480000000000000000000000000"
+   ],
+   "expected": -2147483648
+  },
+  {
+   "args": [
+    "    0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+   ],
+   "expected": 0
+  }
+ ],
+ "verification": {
+  "datasetCases": 188,
+  "parsedCases": 185,
+  "agreedCases": 185,
+  "secondSolution": true
+ },
+ "referenceSolution": "class Solution:\n    def myAtoi(self, s: str) -> int:\n        if not s:\n            return 0\n        n = len(s)\n        if n == 0:\n            return 0\n        i = 0\n        while s[i] == ' ':\n            i += 1\n            # 仅包含空格\n            if i == n:\n                return 0\n        sign = -1 if s[i] == '-' else 1\n        if s[i] in ['-', '+']:\n            i += 1\n        res, flag = 0, (2**31 - 1) // 10\n        while i < n:\n            # 非数字，跳出循环体\n            if not s[i].isdigit():\n                break\n            c = int(s[i])\n            # 溢出判断\n            if res > flag or (res == flag and c > 7):\n                return 2**31 - 1 if sign > 0 else -(2**31)\n            res = res * 10 + c\n            i += 1\n        return sign * res\n",
+ "draft": {
+  "title": "String to Integer Conversion",
+  "statement": "Parse the input string `s` and produce a signed 32‑bit integer following these steps:\n\n* Skip any leading space characters.\n* Look at the next character: if it is ‘-’ or ‘+’, record the sign (negative for ‘-’, positive otherwise) and move past it.\n* Read consecutive digits, ignoring any leading zeros, until a non‑digit or the end of the string appears. If no digit is read, the result is 0.\n* Clamp the obtained value to the range **[-2³¹, 2³¹‑1]**. Values smaller than -2³¹ become -2³¹, larger than 2³¹‑1 become 2³¹‑1.\n\nReturn the final integer.",
+  "constraints": [
+   "0 ≤ s.length ≤ 200",
+   "s contains only letters, digits, space, '+', '-', and '.'"
+  ],
+  "pattern": "String parsing",
+  "mentorNotes": {
+   "keyInsight": "Identify the exact point where digit reading should stop and handle overflow before it occurs.",
+   "bruteForce": "Iterate through the string character by character, building the number using a big‑integer type, then clamp at the end – O(n) time, O(1) extra space.",
+   "optimal": "Process characters once, updating the result while checking overflow on each step – O(n) time, O(1) space.",
+   "commonMistakes": [
+    "Forgetting to skip leading spaces before checking sign",
+    "Treating characters after the first non‑digit as part of the number",
+    "Missing overflow detection for the last digit",
+    "Returning the sign incorrectly when no digits are found"
+   ],
+   "edgeCases": [
+    "String with only spaces",
+    "String like \"-0\" or \"+000\"",
+    "String that exceeds 32‑bit limits, e.g., \"91283472332\"",
+    "String starting with non‑digit, e.g., \"words 123\""
+   ]
+  },
+  "draftedAt": "2026-10-19T08:22:56.904Z"
+ }
+}

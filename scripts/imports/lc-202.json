@@ -1,0 +1,145 @@
+{
+ "id": "lc-202",
+ "status": "pending",
+ "source": {
+  "dataset": "newfacade/LeetCodeDataset",
+  "license": "Apache-2.0",
+  "questionId": 202,
+  "taskId": "happy-number",
+  "tags": [
+   "Hash Table",
+   "Math",
+   "Two Pointers"
+  ]
+ },
+ "difficulty": "easy",
+ "topic": "two-pointers",
+ "functionName": {
+  "python": "is_happy",
+  "javascript": "isHappy"
+ },
+ "params": [
+  "n"
+ ],
+ "compare": "exact",
+ "tests": [
+  {
+   "args": [
+    100
+   ],
+   "expected": true
+  },
+  {
+   "args": [
+    58
+   ],
+   "expected": false
+  },
+  {
+   "args": [
+    489
+   ],
+   "expected": false
+  }
+ ],
+ "hiddenTests": [
+  {
+   "args": [
+    1
+   ],
+   "expected": true
+  },
+  {
+   "args": [
+    2
+   ],
+   "expected": false
+  },
+  {
+   "args": [
+    82
+   ],
+   "expected": true
+  },
+  {
+   "args": [
+    23
+   ],
+   "expected": true
+  },
+  {
+   "args": [
+    203
+   ],
+   "expected": true
+  },
+  {
+   "args": [
+    89
+   ],
+   "expected": false
+  },
+  {
+   "args": [
+    324
+   ],
+   "expected": false
+  },
+  {
+   "args": [
+    999
+   ],
+   "expected": false
+  },
+  {
+   "args": [
+    370
+   ],
+   "expected": false
+  },
+  {
+   "args": [
+    9474
+   ],
+   "expected": false
+  },
+  {
+   "args": [
+    14657
+   ],
+   "expected": false
+  },
+  {
+   "args": [
+    2736895
+   ],
+   "expected": false
+  },
+  {
+   "args": [
+    789789789
+   ],
+   "expected": false
+  },
+  {
+   "args": [
+    123456789
+   ],
+   "expected": false
+  },
+  {
+   "args": [
+    8989898989
+   ],
+   "expected": false
+  }
+ ],
+ "verification": {
+  "datasetCases": 55,
+  "parsedCases": 55,
+  "agreedCases": 55,
+  "secondSolution": true
+ },
+ "referenceSolution": "class Solution:\n    def isHappy(self, n: int) -> bool:\n        vis = set()\n        while n != 1 and n not in vis:\n            vis.add(n)\n            x = 0\n            while n:\n                n, v = divmod(n, 10)\n                x += v * v\n            n = x\n        return n == 1\n",
+ "draft": null
+}

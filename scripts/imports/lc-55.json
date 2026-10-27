@@ -1,0 +1,330 @@
+{
+ "id": "lc-55",
+ "status": "pending",
+ "source": {
+  "dataset": "newfacade/LeetCodeDataset",
+  "license": "Apache-2.0",
+  "questionId": 55,
+  "taskId": "jump-game",
+  "tags": [
+   "Greedy",
+   "Array",
+   "Dynamic Programming"
+  ]
+ },
+ "difficulty": "medium",
+ "topic": "dp",
+ "functionName": {
+  "python": "can_jump",
+  "javascript": "canJump"
+ },
+ "params": [
+  "nums"
+ ],
+ "compare": "exact",
+ "tests": [
+  {
+   "args": [
+    [
+     2,
+     0,
+     0,
+     0,
+     1
+    ]
+   ],
+   "expected": false
+  },
+  {
+   "args": [
+    [
+     4,
+     3,
+     2,
+     1,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   ],
+   "expected": false
+  },
+  {
+   "args": [
+    [
+     9,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   ],
+   "expected": true
+  }
+ ],
+ "hiddenTests": [
+  {
+   "args": [
+    [
+     0
+    ]
+   ],
+   "expected": true
+  },
+  {
+   "args": [
+    [
+     2,
+     5,
+     0,
+     0
+    ]
+   ],
+   "expected": true
+  },
+  {
+   "args": [
+    [
+     2,
+     3,
+     1,
+     1,
+     4
+    ]
+   ],
+   "expected": true
+  },
+  {
+   "args": [
+    [
+     3,
+     2,
+     1,
+     0,
+     4
+    ]
+   ],
+   "expected": false
+  },
+  {
+   "args": [
+    [
+     2,
+     0,
+     0,
+     0,
+     1,
+     0
+    ]
+   ],
+   "expected": false
+  },
+  {
+   "args": [
+    [
+     4,
+     2,
+     0,
+     0,
+     1,
+     1,
+     4,
+     4,
+     0,
+     4
+    ]
+   ],
+   "expected": true
+  },
+  {
+   "args": [
+    [
+     2,
+     5,
+     0,
+     0,
+     1,
+     1,
+     1,
+     1,
+     0,
+     2
+    ]
+   ],
+   "expected": false
+  },
+  {
+   "args": [
+    [
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0
+    ]
+   ],
+   "expected": false
+  },
+  {
+   "args": [
+    [
+     1,
+     2,
+     0,
+     2,
+     0,
+     1,
+     0,
+     0,
+     1,
+     0
+    ]
+   ],
+   "expected": false
+  },
+  {
+   "args": [
+    [
+     2,
+     5,
+     0,
+     0,
+     0,
+     0,
+     4,
+     1,
+     1,
+     1,
+     1
+    ]
+   ],
+   "expected": true
+  },
+  {
+   "args": [
+    [
+     1,
+     1,
+     2,
+     2,
+     1,
+     1,
+     1,
+     1,
+     1,
+     0,
+     0
+    ]
+   ],
+   "expected": false
+  },
+  {
+   "args": [
+    [
+     1,
+     1,
+     2,
+     2,
+     3,
+     3,
+     4,
+     4,
+     5,
+     5,
+     6,
+     6
+    ]
+   ],
+   "expected": true
+  },
+  {
+   "args": [
+    [
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1
+    ]
+   ],
+   "expected": false
+  },
+  {
+   "args": [
+    [
+     1,
+     1,
+     0,
+     0,
+     1,
+     1,
+     0,
+     0,
+     1,
+     1,
+     0,
+     0,
+     1,
+     1
+    ]
+   ],
+   "expected": false
+  },
+  {
+   "args": [
+    [
+     1,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     1
+    ]
+   ],
+   "expected": false
+  }
+ ],
+ "verification": {
+  "datasetCases": 66,
+  "parsedCases": 66,
+  "agreedCases": 66,
+  "secondSolution": true
+ },
+ "referenceSolution": "class Solution:\n    def canJump(self, nums: List[int]) -> bool:\n        mx = 0\n        for i, x in enumerate(nums):\n            if mx < i:\n                return False\n            mx = max(mx, i + x)\n        return True\n",
+ "draft": null
+}

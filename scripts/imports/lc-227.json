@@ -1,0 +1,145 @@
+{
+ "id": "lc-227",
+ "status": "pending",
+ "source": {
+  "dataset": "newfacade/LeetCodeDataset",
+  "license": "Apache-2.0",
+  "questionId": 227,
+  "taskId": "basic-calculator-ii",
+  "tags": [
+   "Stack",
+   "Math",
+   "String"
+  ]
+ },
+ "difficulty": "medium",
+ "topic": "stack",
+ "functionName": {
+  "python": "calculate",
+  "javascript": "calculate"
+ },
+ "params": [
+  "s"
+ ],
+ "compare": "exact",
+ "tests": [
+  {
+   "args": [
+    "32 / 2 * 2 + 1 - 1"
+   ],
+   "expected": 32
+  },
+  {
+   "args": [
+    "2147483647 - 2147483646"
+   ],
+   "expected": 1
+  },
+  {
+   "args": [
+    " 2000 / 10 + 50 * 2 - 300 "
+   ],
+   "expected": 0
+  }
+ ],
+ "hiddenTests": [
+  {
+   "args": [
+    "0 + 0"
+   ],
+   "expected": 0
+  },
+  {
+   "args": [
+    "10 + 2 * 6"
+   ],
+   "expected": 22
+  },
+  {
+   "args": [
+    "100 * 2 + 12"
+   ],
+   "expected": 212
+  },
+  {
+   "args": [
+    " 200 - 3 * 50 + 25"
+   ],
+   "expected": 75
+  },
+  {
+   "args": [
+    " 5 + 3 * ( 20 / 4 ) "
+   ],
+   "expected": 20
+  },
+  {
+   "args": [
+    " 7 + 3 * ( 10 / 2 ) - 5"
+   ],
+   "expected": 17
+  },
+  {
+   "args": [
+    "2 + 3 * 5 / 2 - 8 / 4 + 6"
+   ],
+   "expected": 13
+  },
+  {
+   "args": [
+    "10 + 2 * 6 / ( 1 - 2 ) * 3"
+   ],
+   "expected": 16
+  },
+  {
+   "args": [
+    "   23 + 56 * 99 / 77 - 44   "
+   ],
+   "expected": 51
+  },
+  {
+   "args": [
+    "100000 / 100 - 99999 * 0 + 1"
+   ],
+   "expected": 1001
+  },
+  {
+   "args": [
+    "2 + 3 * 4 - 5 / 2 + 6 * 7 - 8 / 4"
+   ],
+   "expected": 52
+  },
+  {
+   "args": [
+    "2222 + 1111 * 2 - 3333 / 11 + 4444"
+   ],
+   "expected": 8585
+  },
+  {
+   "args": [
+    "   3   *   5   /   15   +   10   -   7   "
+   ],
+   "expected": 4
+  },
+  {
+   "args": [
+    " 12345 + 67890 - 54321 / 1234 * 5678  "
+   ],
+   "expected": -169597
+  },
+  {
+   "args": [
+    "3 + 33 + 333 + 3333 + 33333 + 333333 + 3333333 + 33333333 + 333333333"
+   ],
+   "expected": 370370367
+  }
+ ],
+ "verification": {
+  "datasetCases": 171,
+  "parsedCases": 171,
+  "agreedCases": 171,
+  "secondSolution": true
+ },
+ "referenceSolution": "class Solution:\n    def calculate(self, s: str) -> int:\n        v, n = 0, len(s)\n        sign = '+'\n        stk = []\n        for i, c in enumerate(s):\n            if c.isdigit():\n                v = v * 10 + int(c)\n            if i == n - 1 or c in '+-*/':\n                match sign:\n                    case '+':\n                        stk.append(v)\n                    case '-':\n                        stk.append(-v)\n                    case '*':\n                        stk.append(stk.pop() * v)\n                    case '/':\n                        stk.append(int(stk.pop() / v))\n                sign = c\n                v = 0\n        return sum(stk)\n",
+ "draft": null
+}

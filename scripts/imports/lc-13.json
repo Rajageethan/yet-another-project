@@ -1,0 +1,172 @@
+{
+ "id": "lc-13",
+ "status": "pending",
+ "source": {
+  "dataset": "newfacade/LeetCodeDataset",
+  "license": "Apache-2.0",
+  "questionId": 13,
+  "taskId": "roman-to-integer",
+  "tags": [
+   "Hash Table",
+   "Math",
+   "String"
+  ]
+ },
+ "difficulty": "easy",
+ "topic": "arrays-hashing",
+ "functionName": {
+  "python": "roman_to_int",
+  "javascript": "romanToInt"
+ },
+ "params": [
+  "s"
+ ],
+ "compare": "exact",
+ "tests": [
+  {
+   "args": [
+    "CCC"
+   ],
+   "expected": 300
+  },
+  {
+   "args": [
+    "LXXXIX"
+   ],
+   "expected": 89
+  },
+  {
+   "args": [
+    "CCCXCIX"
+   ],
+   "expected": 399
+  }
+ ],
+ "hiddenTests": [
+  {
+   "args": [
+    "IX"
+   ],
+   "expected": 9
+  },
+  {
+   "args": [
+    "D"
+   ],
+   "expected": 500
+  },
+  {
+   "args": [
+    "XXX"
+   ],
+   "expected": 30
+  },
+  {
+   "args": [
+    "XLIV"
+   ],
+   "expected": 44
+  },
+  {
+   "args": [
+    "MMM"
+   ],
+   "expected": 3000
+  },
+  {
+   "args": [
+    "CCXLVI"
+   ],
+   "expected": 246
+  },
+  {
+   "args": [
+    "CMXLVII"
+   ],
+   "expected": 947
+  },
+  {
+   "args": [
+    "CCCLXXIV"
+   ],
+   "expected": 374
+  },
+  {
+   "args": [
+    "DCCCXCIX"
+   ],
+   "expected": 899
+  },
+  {
+   "args": [
+    "MMCDLXXI"
+   ],
+   "expected": 2471
+  },
+  {
+   "args": [
+    "MDCCCLXXI"
+   ],
+   "expected": 1871
+  },
+  {
+   "args": [
+    "MCMLXXXIV"
+   ],
+   "expected": 1984
+  },
+  {
+   "args": [
+    "MMCMCCXCIX"
+   ],
+   "expected": 3199
+  },
+  {
+   "args": [
+    "MMDCCCLXXIV"
+   ],
+   "expected": 2874
+  },
+  {
+   "args": [
+    "MMMCMXCCLXXVIII"
+   ],
+   "expected": 4168
+  }
+ ],
+ "verification": {
+  "datasetCases": 94,
+  "parsedCases": 94,
+  "agreedCases": 94,
+  "secondSolution": true
+ },
+ "referenceSolution": "class Solution:\n    def romanToInt(self, s: str) -> int:\n        d = {'I': 1, 'V': 5, 'X': 10, 'L': 50, 'C': 100, 'D': 500, 'M': 1000}\n        return sum((-1 if d[a] < d[b] else 1) * d[a] for a, b in pairwise(s)) + d[s[-1]]\n",
+ "draft": {
+  "title": "Roman to Integer",
+  "statement": "You are given a string `s` that represents a Roman numeral. Each character corresponds to a value: `I` = 1, `V` = 5, `X` = 10, `L` = 50, `C` = 100, `D` = 500, `M` = 1000. Normally the symbols are arranged from highest to lowest, and their values are added. However, when a smaller value appears directly before a larger one, it must be subtracted (the only allowed subtractive pairs are `IV`, `IX`, `XL`, `XC`, `CD`, `CM`). Compute and return the integer value of `s`.",
+  "constraints": [
+   "1 ≤ s.length ≤ 15",
+   "s consists solely of the characters I, V, X, L, C, D, M",
+   "s is a well‑formed Roman numeral representing a number between 1 and 3999 inclusive"
+  ],
+  "pattern": "Hash map lookup",
+  "mentorNotes": {
+   "keyInsight": "When scanning left‑to‑right, a character should be subtracted if its value is smaller than the value of the next character; otherwise it is added.",
+   "bruteForce": "Convert each possible Roman pattern to its integer by checking every two‑character combination and summing – O(n) time, O(1) extra space, but with many conditionals it becomes messy.",
+   "optimal": "Traverse the string once, using a hashmap to get each symbol’s value and decide addition or subtraction based on the next symbol – O(n) time, O(1) space.",
+   "commonMistakes": [
+    "Forgetting to handle the last character after the loop",
+    "Treating every smaller‑than‑next symbol as subtraction, even when the pair isn’t a valid subtractive combination",
+    "Using string concatenation or repeated lookups that increase time complexity",
+    "Assuming the input may contain invalid sequences, leading to extra validation code"
+   ],
+   "edgeCases": [
+    "A single character like \"V\" should return 5",
+    "The smallest numeral \"I\" returns 1",
+    "Maximum length \"MMMCMXCIX\" (3999) tests all subtractive cases",
+    "A string where every character is larger than the next, e.g., \"MDCLXVI\", should be summed directly"
+   ]
+  },
+  "draftedAt": "2026-10-19T08:22:58.841Z"
+ }
+}

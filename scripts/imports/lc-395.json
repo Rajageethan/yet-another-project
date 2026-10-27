@@ -1,0 +1,165 @@
+{
+ "id": "lc-395",
+ "status": "pending",
+ "source": {
+  "dataset": "newfacade/LeetCodeDataset",
+  "license": "Apache-2.0",
+  "questionId": 395,
+  "taskId": "longest-substring-with-at-least-k-repeating-characters",
+  "tags": [
+   "Hash Table",
+   "String",
+   "Divide and Conquer",
+   "Sliding Window"
+  ]
+ },
+ "difficulty": "medium",
+ "topic": "sliding-window",
+ "functionName": {
+  "python": "longest_substring",
+  "javascript": "longestSubstring"
+ },
+ "params": [
+  "s",
+  "k"
+ ],
+ "compare": "exact",
+ "tests": [
+  {
+   "args": [
+    "aaaabbbbcccc",
+    5
+   ],
+   "expected": 0
+  },
+  {
+   "args": [
+    "xyzzxyzzxyzz",
+    3
+   ],
+   "expected": 12
+  },
+  {
+   "args": [
+    "aabbccddeeffgg",
+    2
+   ],
+   "expected": 14
+  }
+ ],
+ "hiddenTests": [
+  {
+   "args": [
+    "",
+    1
+   ],
+   "expected": 0
+  },
+  {
+   "args": [
+    "aabbcc",
+    1
+   ],
+   "expected": 6
+  },
+  {
+   "args": [
+    "abcabcabc",
+    3
+   ],
+   "expected": 9
+  },
+  {
+   "args": [
+    "aabacbebebe",
+    3
+   ],
+   "expected": 6
+  },
+  {
+   "args": [
+    "abababababab",
+    3
+   ],
+   "expected": 12
+  },
+  {
+   "args": [
+    "aabbccddeeffgg",
+    4
+   ],
+   "expected": 0
+  },
+  {
+   "args": [
+    "zzzzzyyyyyxxxx",
+    4
+   ],
+   "expected": 14
+  },
+  {
+   "args": [
+    "xyzzzxyzzzxyzzz",
+    3
+   ],
+   "expected": 15
+  },
+  {
+   "args": [
+    "zzzzzaaazzzzzzzzzz",
+    5
+   ],
+   "expected": 10
+  },
+  {
+   "args": [
+    "abccbaabccccddddeeeee",
+    2
+   ],
+   "expected": 21
+  },
+  {
+   "args": [
+    "abcdefghigklmnopqrstuvwxyz",
+    1
+   ],
+   "expected": 26
+  },
+  {
+   "args": [
+    "aabbaaaccbbccaaaaccccbbbbaaaaa",
+    6
+   ],
+   "expected": 30
+  },
+  {
+   "args": [
+    "abababababababababababababababab",
+    5
+   ],
+   "expected": 32
+  },
+  {
+   "args": [
+    "aabbccddeeffgghhiijjkkllmmnnooppqqrrssttuuvvwwxxyyzz",
+    5
+   ],
+   "expected": 0
+  },
+  {
+   "args": [
+    "zzzzzyyyyyxxxxwwwwvvvvuuuuttttssssrrrrqqqqpppplllloooonnnnmmmkkkjjjiiihhhhggggffffeeeeddddccccbbbbaaaaa",
+    5
+   ],
+   "expected": 10
+  }
+ ],
+ "verification": {
+  "datasetCases": 109,
+  "parsedCases": 109,
+  "agreedCases": 109,
+  "secondSolution": true
+ },
+ "referenceSolution": "class Solution:\n    def longestSubstring(self, s: str, k: int) -> int:\n        def dfs(l, r):\n            cnt = Counter(s[l : r + 1])\n            split = next((c for c, v in cnt.items() if v < k), '')\n            if not split:\n                return r - l + 1\n            i = l\n            ans = 0\n            while i <= r:\n                while i <= r and s[i] == split:\n                    i += 1\n                if i >= r:\n                    break\n                j = i\n                while j <= r and s[j] != split:\n                    j += 1\n                t = dfs(i, j - 1)\n                ans = max(ans, t)\n                i = j\n            return ans\n\n        return dfs(0, len(s) - 1)\n",
+ "draft": null
+}

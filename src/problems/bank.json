@@ -1,0 +1,4617 @@
+[
+ {
+  "slug": "pair-with-target-sum",
+  "title": "Pair With Target Sum",
+  "difficulty": "easy",
+  "topic": "arrays-hashing",
+  "pattern": "Complement lookup",
+  "statement": "Given a list of integers `nums` and an integer `target`, return the indices `[i, j]` (with `i < j`) of the two numbers that add up to `target`.\n\nExactly one valid pair exists. You may not use the same element twice.",
+  "constraints": [
+   "2 ≤ len(nums) ≤ 10⁴",
+   "-10⁹ ≤ nums[i], target ≤ 10⁹",
+   "Exactly one answer exists"
+  ],
+  "functionName": {
+   "python": "pair_with_sum",
+   "javascript": "pairWithSum"
+  },
+  "params": [
+   "nums",
+   "target"
+  ],
+  "starter": {
+   "python": "def pair_with_sum(nums, target):\n    pass\n",
+   "javascript": "function pairWithSum(nums, target) {\n  \n}\n"
+  },
+  "compare": "exact",
+  "tests": [
+   {
+    "args": [
+     [
+      2,
+      7,
+      11,
+      15
+     ],
+     9
+    ],
+    "expected": [
+     0,
+     1
+    ]
+   },
+   {
+    "args": [
+     [
+      3,
+      2,
+      4
+     ],
+     6
+    ],
+    "expected": [
+     1,
+     2
+    ]
+   },
+   {
+    "args": [
+     [
+      3,
+      3
+     ],
+     6
+    ],
+    "expected": [
+     0,
+     1
+    ]
+   }
+  ],
+  "hiddenTests": [
+   {
+    "args": [
+     [
+      -1,
+      -2,
+      -3,
+      -4,
+      -5
+     ],
+     -8
+    ],
+    "expected": [
+     2,
+     4
+    ]
+   },
+   {
+    "args": [
+     [
+      0,
+      4,
+      3,
+      0
+     ],
+     0
+    ],
+    "expected": [
+     0,
+     3
+    ]
+   },
+   {
+    "args": [
+     [
+      1,
+      5,
+      9,
+      -3
+     ],
+     6
+    ],
+    "expected": [
+     0,
+     1
+    ]
+   },
+   {
+    "args": [
+     [
+      -12,
+      -13,
+      18,
+      -10,
+      14,
+      2,
+      -2
+     ],
+     -8
+    ],
+    "expected": [
+     3,
+     5
+    ]
+   },
+   {
+    "args": [
+     [
+      -4,
+      -2,
+      11,
+      -2,
+      -10,
+      20,
+      -9,
+      8,
+      8,
+      -7,
+      15
+     ],
+     10
+    ],
+    "expected": [
+     4,
+     5
+    ]
+   },
+   {
+    "args": [
+     [
+      15,
+      -18,
+      -20,
+      15,
+      -6,
+      18,
+      -12,
+      8,
+      12
+     ],
+     -12
+    ],
+    "expected": [
+     2,
+     7
+    ]
+   },
+   {
+    "args": [
+     [
+      6,
+      -16,
+      -15,
+      20,
+      -17,
+      16
+     ],
+     0
+    ],
+    "expected": [
+     1,
+     5
+    ]
+   },
+   {
+    "args": [
+     [
+      8,
+      -6,
+      -17
+     ],
+     2
+    ],
+    "expected": [
+     0,
+     1
+    ]
+   },
+   {
+    "args": [
+     [
+      -12,
+      16,
+      -11,
+      18,
+      18,
+      -3
+     ],
+     36
+    ],
+    "expected": [
+     3,
+     4
+    ]
+   },
+   {
+    "args": [
+     [
+      13,
+      8,
+      11,
+      -14
+     ],
+     24
+    ],
+    "expected": [
+     0,
+     2
+    ]
+   },
+   {
+    "args": [
+     [
+      -1,
+      10,
+      15,
+      6,
+      -18,
+      -4,
+      8,
+      -15,
+      11
+     ],
+     4
+    ],
+    "expected": [
+     5,
+     6
+    ]
+   },
+   {
+    "args": [
+     [
+      -7,
+      16,
+      -12,
+      8,
+      -10
+     ],
+     -17
+    ],
+    "expected": [
+     0,
+     4
+    ]
+   }
+  ],
+  "mentorNotes": {
+   "keyInsight": "For each number x, the only partner that works is target - x. Remember what you have seen in a hash map (value → index) so the check is O(1).",
+   "bruteForce": "Try every pair i < j: O(n²) time, O(1) space.",
+   "optimal": "One pass with a hash map: check whether target - x was seen before inserting x. O(n) time, O(n) space.",
+   "commonMistakes": [
+    "Inserting x before checking, so [3,2,4] with target 6 pairs 3 with itself",
+    "Returning the values instead of the indices",
+    "Returning indices in the wrong order"
+   ],
+   "edgeCases": [
+    "Duplicate values ([3,3])",
+    "Negative numbers",
+    "Zeros"
+   ]
+  }
+ },
+ {
+  "slug": "duplicate-finder",
+  "title": "Duplicate Finder",
+  "difficulty": "easy",
+  "topic": "arrays-hashing",
+  "pattern": "Hash set membership",
+  "statement": "Given a list of integers `nums`, return `true` if any value appears at least twice, and `false` if every value is distinct.",
+  "constraints": [
+   "0 ≤ len(nums) ≤ 10⁵",
+   "-10⁹ ≤ nums[i] ≤ 10⁹"
+  ],
+  "functionName": {
+   "python": "has_duplicate",
+   "javascript": "hasDuplicate"
+  },
+  "params": [
+   "nums"
+  ],
+  "starter": {
+   "python": "def has_duplicate(nums):\n    pass\n",
+   "javascript": "function hasDuplicate(nums) {\n  \n}\n"
+  },
+  "compare": "exact",
+  "tests": [
+   {
+    "args": [
+     [
+      1,
+      2,
+      3,
+      1
+     ]
+    ],
+    "expected": true
+   },
+   {
+    "args": [
+     [
+      1,
+      2,
+      3,
+      4
+     ]
+    ],
+    "expected": false
+   },
+   {
+    "args": [
+     [
+      1,
+      1,
+      1,
+      3,
+      3,
+      4,
+      3,
+      2,
+      4,
+      2
+     ]
+    ],
+    "expected": true
+   }
+  ],
+  "hiddenTests": [
+   {
+    "args": [
+     []
+    ],
+    "expected": false
+   },
+   {
+    "args": [
+     [
+      7
+     ]
+    ],
+    "expected": false
+   },
+   {
+    "args": [
+     [
+      0,
+      0
+     ]
+    ],
+    "expected": true
+   },
+   {
+    "args": [
+     [
+      -1,
+      1
+     ]
+    ],
+    "expected": false
+   },
+   {
+    "args": [
+     [
+      7,
+      0,
+      13
+     ]
+    ],
+    "expected": false
+   },
+   {
+    "args": [
+     [
+      8,
+      -14,
+      -10,
+      12,
+      -8,
+      13
+     ]
+    ],
+    "expected": false
+   },
+   {
+    "args": [
+     [
+      13,
+      5,
+      12,
+      13,
+      2,
+      -3,
+      5,
+      12
+     ]
+    ],
+    "expected": true
+   },
+   {
+    "args": [
+     [
+      -5,
+      3,
+      -7,
+      5,
+      10,
+      -14,
+      -9,
+      11
+     ]
+    ],
+    "expected": false
+   },
+   {
+    "args": [
+     [
+      12,
+      -13,
+      9,
+      -10,
+      3,
+      -13
+     ]
+    ],
+    "expected": true
+   },
+   {
+    "args": [
+     [
+      -3,
+      -6,
+      -2,
+      -4,
+      -2,
+      8,
+      -5
+     ]
+    ],
+    "expected": true
+   },
+   {
+    "args": [
+     [
+      -15,
+      11,
+      -7,
+      3,
+      11,
+      13,
+      12
+     ]
+    ],
+    "expected": true
+   },
+   {
+    "args": [
+     [
+      -9,
+      11,
+      -14,
+      14,
+      12,
+      5,
+      1
+     ]
+    ],
+    "expected": false
+   }
+  ],
+  "mentorNotes": {
+   "keyInsight": "You only need to know whether you've seen a value before, so a set answers that in O(1).",
+   "bruteForce": "Compare every pair: O(n²).",
+   "optimal": "Sort and compare neighbours (O(n log n)), or a hash set (O(n) time, O(n) space).",
+   "commonMistakes": [
+    "Comparing adjacent elements without sorting first"
+   ],
+   "edgeCases": [
+    "Empty list",
+    "Single element",
+    "Negative numbers"
+   ]
+  }
+ },
+ {
+  "slug": "anagram-check",
+  "title": "Anagram Check",
+  "difficulty": "easy",
+  "topic": "arrays-hashing",
+  "pattern": "Frequency counting",
+  "statement": "Given two strings `s` and `t` of lowercase letters, return `true` if `t` uses exactly the same letters as `s`, the same number of times each (in any order).",
+  "constraints": [
+   "0 ≤ len(s), len(t) ≤ 5·10⁴",
+   "Only lowercase English letters"
+  ],
+  "functionName": {
+   "python": "is_anagram",
+   "javascript": "isAnagram"
+  },
+  "params": [
+   "s",
+   "t"
+  ],
+  "starter": {
+   "python": "def is_anagram(s, t):\n    pass\n",
+   "javascript": "function isAnagram(s, t) {\n  \n}\n"
+  },
+  "compare": "exact",
+  "tests": [
+   {
+    "args": [
+     "listen",
+     "silent"
+    ],
+    "expected": true
+   },
+   {
+    "args": [
+     "rat",
+     "car"
+    ],
+    "expected": false
+   },
+   {
+    "args": [
+     "aab",
+     "abb"
+    ],
+    "expected": false
+   }
+  ],
+  "hiddenTests": [
+   {
+    "args": [
+     "",
+     ""
+    ],
+    "expected": true
+   },
+   {
+    "args": [
+     "a",
+     "ab"
+    ],
+    "expected": false
+   },
+   {
+    "args": [
+     "abc",
+     "cba"
+    ],
+    "expected": true
+   },
+   {
+    "args": [
+     "abdb",
+     "daab"
+    ],
+    "expected": false
+   },
+   {
+    "args": [
+     "edbaaecb",
+     "ecebadab"
+    ],
+    "expected": true
+   },
+   {
+    "args": [
+     "e",
+     "a"
+    ],
+    "expected": false
+   },
+   {
+    "args": [
+     "bebdde",
+     "ddebeb"
+    ],
+    "expected": true
+   },
+   {
+    "args": [
+     "dacdbeb",
+     "dcbbaed"
+    ],
+    "expected": true
+   },
+   {
+    "args": [
+     "badc",
+     "bacd"
+    ],
+    "expected": true
+   },
+   {
+    "args": [
+     "bcc",
+     "bcc"
+    ],
+    "expected": true
+   },
+   {
+    "args": [
+     "beaadee",
+     "abeedae"
+    ],
+    "expected": true
+   },
+   {
+    "args": [
+     "ccbee",
+     "cebec"
+    ],
+    "expected": true
+   }
+  ],
+  "mentorNotes": {
+   "keyInsight": "Two strings are anagrams exactly when every letter has the same count in both.",
+   "bruteForce": "Sort both strings and compare: O(n log n).",
+   "optimal": "Count letters with a 26-slot array or hash map: O(n) time, O(1) extra space.",
+   "commonMistakes": [
+    "Comparing sets, which ignores counts (aab vs abb)",
+    "Forgetting the length check"
+   ],
+   "edgeCases": [
+    "Empty strings",
+    "Different lengths",
+    "Repeated letters"
+   ]
+  }
+ },
+ {
+  "slug": "top-k-frequent",
+  "title": "Most Frequent K",
+  "difficulty": "medium",
+  "topic": "arrays-hashing",
+  "pattern": "Count, then bucket or sort",
+  "statement": "Given a list of integers `nums` and an integer `k`, return the `k` most frequent values.\n\nOrder the result from most to least frequent. If two values are equally frequent, the smaller value comes first.",
+  "constraints": [
+   "1 ≤ len(nums) ≤ 10⁵",
+   "1 ≤ k ≤ number of distinct values"
+  ],
+  "functionName": {
+   "python": "top_k_frequent",
+   "javascript": "topKFrequent"
+  },
+  "params": [
+   "nums",
+   "k"
+  ],
+  "starter": {
+   "python": "def top_k_frequent(nums, k):\n    pass\n",
+   "javascript": "function topKFrequent(nums, k) {\n  \n}\n"
+  },
+  "compare": "exact",
+  "tests": [
+   {
+    "args": [
+     [
+      1,
+      1,
+      1,
+      2,
+      2,
+      3
+     ],
+     2
+    ],
+    "expected": [
+     1,
+     2
+    ]
+   },
+   {
+    "args": [
+     [
+      4
+     ],
+     1
+    ],
+    "expected": [
+     4
+    ]
+   },
+   {
+    "args": [
+     [
+      5,
+      3,
+      5,
+      3,
+      1
+     ],
+     2
+    ],
+    "expected": [
+     3,
+     5
+    ]
+   }
+  ],
+  "hiddenTests": [
+   {
+    "args": [
+     [
+      2,
+      2,
+      1,
+      1
+     ],
+     2
+    ],
+    "expected": [
+     1,
+     2
+    ]
+   },
+   {
+    "args": [
+     [
+      9,
+      8,
+      7
+     ],
+     3
+    ],
+    "expected": [
+     7,
+     8,
+     9
+    ]
+   },
+   {
+    "args": [
+     [
+      6,
+      8,
+      4,
+      1,
+      7,
+      2,
+      3,
+      7,
+      7,
+      2,
+      5,
+      4,
+      5,
+      7
+     ],
+     3
+    ],
+    "expected": [
+     7,
+     2,
+     4
+    ]
+   },
+   {
+    "args": [
+     [
+      3,
+      7,
+      5,
+      8,
+      4,
+      1,
+      6,
+      5
+     ],
+     4
+    ],
+    "expected": [
+     5,
+     1,
+     3,
+     4
+    ]
+   },
+   {
+    "args": [
+     [
+      4,
+      1,
+      2,
+      2,
+      5,
+      8,
+      8,
+      8,
+      7,
+      1,
+      6
+     ],
+     5
+    ],
+    "expected": [
+     8,
+     1,
+     2,
+     4,
+     5
+    ]
+   },
+   {
+    "args": [
+     [
+      8,
+      6,
+      8,
+      1,
+      1,
+      7,
+      3,
+      1,
+      2,
+      3
+     ],
+     2
+    ],
+    "expected": [
+     1,
+     3
+    ]
+   },
+   {
+    "args": [
+     [
+      2,
+      2,
+      8,
+      2
+     ],
+     1
+    ],
+    "expected": [
+     2
+    ]
+   },
+   {
+    "args": [
+     [
+      6
+     ],
+     1
+    ],
+    "expected": [
+     6
+    ]
+   },
+   {
+    "args": [
+     [
+      3,
+      7,
+      4,
+      8,
+      1,
+      6,
+      1,
+      8
+     ],
+     1
+    ],
+    "expected": [
+     1
+    ]
+   },
+   {
+    "args": [
+     [
+      6,
+      5,
+      3,
+      7,
+      4,
+      4
+     ],
+     3
+    ],
+    "expected": [
+     4,
+     3,
+     5
+    ]
+   },
+   {
+    "args": [
+     [
+      1,
+      6
+     ],
+     2
+    ],
+    "expected": [
+     1,
+     6
+    ]
+   },
+   {
+    "args": [
+     [
+      1,
+      2,
+      1
+     ],
+     1
+    ],
+    "expected": [
+     1
+    ]
+   }
+  ],
+  "mentorNotes": {
+   "keyInsight": "First count every value; then the question becomes ordering values by count. Buckets indexed by count avoid a full sort.",
+   "bruteForce": "Count, then sort all distinct values by (-count, value): O(n log n).",
+   "optimal": "Bucket sort by frequency: O(n). A heap of size k gives O(n log k).",
+   "commonMistakes": [
+    "Ignoring the tie-break rule",
+    "Returning counts instead of values"
+   ],
+   "edgeCases": [
+    "k equals the number of distinct values",
+    "All values equally frequent"
+   ]
+  }
+ },
+ {
+  "slug": "palindrome-check",
+  "title": "Clean Palindrome",
+  "difficulty": "easy",
+  "topic": "two-pointers",
+  "pattern": "Converging pointers",
+  "statement": "Given a string `s`, return `true` if it reads the same forwards and backwards after ignoring uppercase/lowercase differences and skipping every character that is not a letter or digit.",
+  "constraints": [
+   "0 ≤ len(s) ≤ 2·10⁵",
+   "Printable ASCII characters"
+  ],
+  "functionName": {
+   "python": "is_palindrome",
+   "javascript": "isPalindrome"
+  },
+  "params": [
+   "s"
+  ],
+  "starter": {
+   "python": "def is_palindrome(s):\n    pass\n",
+   "javascript": "function isPalindrome(s) {\n  \n}\n"
+  },
+  "compare": "exact",
+  "tests": [
+   {
+    "args": [
+     "Never odd or even"
+    ],
+    "expected": true
+   },
+   {
+    "args": [
+     "race a car"
+    ],
+    "expected": false
+   },
+   {
+    "args": [
+     " "
+    ],
+    "expected": true
+   }
+  ],
+  "hiddenTests": [
+   {
+    "args": [
+     ""
+    ],
+    "expected": true
+   },
+   {
+    "args": [
+     "a."
+    ],
+    "expected": true
+   },
+   {
+    "args": [
+     "0P"
+    ],
+    "expected": false
+   },
+   {
+    "args": [
+     "ab_a"
+    ],
+    "expected": true
+   },
+   {
+    "args": [
+     "AA"
+    ],
+    "expected": true
+   },
+   {
+    "args": [
+     ".x"
+    ],
+    "expected": true
+   },
+   {
+    "args": [
+     "A BAB A"
+    ],
+    "expected": true
+   },
+   {
+    "args": [
+     "BAa x aAB"
+    ],
+    "expected": true
+   },
+   {
+    "args": [
+     "1BAb zbAB1"
+    ],
+    "expected": true
+   },
+   {
+    "args": [
+     "AaaA"
+    ],
+    "expected": true
+   },
+   {
+    "args": [
+     "BBab,,baBB"
+    ],
+    "expected": true
+   },
+   {
+    "args": [
+     "1A1xA1"
+    ],
+    "expected": false
+   }
+  ],
+  "mentorNotes": {
+   "keyInsight": "Compare from both ends inward, skipping characters that don't count; no need to build a cleaned copy.",
+   "bruteForce": "Build a cleaned lowercase string and compare it with its reverse: O(n) time, O(n) space.",
+   "optimal": "Two pointers from both ends, skipping non-alphanumerics: O(n) time, O(1) space.",
+   "commonMistakes": [
+    "Forgetting digits count as alphanumeric",
+    "Not lowercasing",
+    "Pointers crossing without a check"
+   ],
+   "edgeCases": [
+    "Empty string",
+    "Only punctuation",
+    "Mixed digits and letters (0P)"
+   ]
+  }
+ },
+ {
+  "slug": "pair-sum-sorted",
+  "title": "Pair Sum, Sorted",
+  "difficulty": "easy",
+  "topic": "two-pointers",
+  "pattern": "Converging pointers",
+  "statement": "`nums` is sorted in non-decreasing order. Return the indices `[i, j]` (with `i < j`) of the two numbers that add up to `target`.\n\nExactly one valid pair exists. Try to use O(1) extra space.",
+  "constraints": [
+   "2 ≤ len(nums) ≤ 3·10⁴",
+   "nums is sorted",
+   "Exactly one answer exists"
+  ],
+  "functionName": {
+   "python": "pair_sum_sorted",
+   "javascript": "pairSumSorted"
+  },
+  "params": [
+   "nums",
+   "target"
+  ],
+  "starter": {
+   "python": "def pair_sum_sorted(nums, target):\n    pass\n",
+   "javascript": "function pairSumSorted(nums, target) {\n  \n}\n"
+  },
+  "compare": "exact",
+  "tests": [
+   {
+    "args": [
+     [
+      2,
+      7,
+      11,
+      15
+     ],
+     9
+    ],
+    "expected": [
+     0,
+     1
+    ]
+   },
+   {
+    "args": [
+     [
+      1,
+      2,
+      3,
+      4,
+      6
+     ],
+     6
+    ],
+    "expected": [
+     1,
+     3
+    ]
+   },
+   {
+    "args": [
+     [
+      -3,
+      -1,
+      0,
+      2,
+      5
+     ],
+     4
+    ],
+    "expected": [
+     1,
+     4
+    ]
+   }
+  ],
+  "hiddenTests": [
+   {
+    "args": [
+     [
+      1,
+      1
+     ],
+     2
+    ],
+    "expected": [
+     0,
+     1
+    ]
+   },
+   {
+    "args": [
+     [
+      -5,
+      -4,
+      0,
+      10
+     ],
+     -9
+    ],
+    "expected": [
+     0,
+     1
+    ]
+   },
+   {
+    "args": [
+     [
+      -7,
+      -2,
+      3,
+      4,
+      7,
+      8,
+      11,
+      13,
+      20
+     ],
+     10
+    ],
+    "expected": [
+     2,
+     4
+    ]
+   },
+   {
+    "args": [
+     [
+      -14,
+      -8,
+      19,
+      21
+     ],
+     40
+    ],
+    "expected": [
+     2,
+     3
+    ]
+   },
+   {
+    "args": [
+     [
+      -7,
+      -6,
+      7,
+      8
+     ],
+     2
+    ],
+    "expected": [
+     1,
+     3
+    ]
+   },
+   {
+    "args": [
+     [
+      -14,
+      -14,
+      -5,
+      -3,
+      4,
+      7,
+      7,
+      9,
+      13,
+      14,
+      18
+     ],
+     8
+    ],
+    "expected": [
+     2,
+     8
+    ]
+   },
+   {
+    "args": [
+     [
+      -14,
+      -8,
+      -7,
+      -2,
+      1,
+      8,
+      11,
+      13,
+      22,
+      24
+     ],
+     24
+    ],
+    "expected": [
+     6,
+     7
+    ]
+   },
+   {
+    "args": [
+     [
+      -4,
+      10,
+      24
+     ],
+     20
+    ],
+    "expected": [
+     0,
+     2
+    ]
+   },
+   {
+    "args": [
+     [
+      -13,
+      -13,
+      2,
+      4,
+      7,
+      16,
+      21,
+      25
+     ],
+     37
+    ],
+    "expected": [
+     5,
+     6
+    ]
+   },
+   {
+    "args": [
+     [
+      -10,
+      7,
+      17,
+      19,
+      21,
+      24,
+      25
+     ],
+     41
+    ],
+    "expected": [
+     2,
+     5
+    ]
+   },
+   {
+    "args": [
+     [
+      -7,
+      -6,
+      11,
+      25
+     ],
+     36
+    ],
+    "expected": [
+     2,
+     3
+    ]
+   },
+   {
+    "args": [
+     [
+      -12,
+      -4,
+      0,
+      3,
+      11,
+      15
+     ],
+     15
+    ],
+    "expected": [
+     2,
+     5
+    ]
+   }
+  ],
+  "mentorNotes": {
+   "keyInsight": "Because the list is sorted, if the current sum is too small only moving the left pointer right can help; if too big, only moving the right pointer left can.",
+   "bruteForce": "All pairs O(n²), or a hash map O(n) time with O(n) space.",
+   "optimal": "Two pointers at both ends moving inward: O(n) time, O(1) space.",
+   "commonMistakes": [
+    "Moving the wrong pointer",
+    "Ignoring that the input is sorted"
+   ],
+   "edgeCases": [
+    "Two-element list",
+    "Negative numbers",
+    "Duplicates"
+   ]
+  }
+ },
+ {
+  "slug": "three-sum-zero",
+  "title": "Zero-Sum Triplets",
+  "difficulty": "medium",
+  "topic": "two-pointers",
+  "pattern": "Sort + two pointers",
+  "statement": "Given a list of integers `nums`, return every unique triplet of values `[a, b, c]` taken from three different positions such that `a + b + c == 0`.\n\nWrite each triplet in ascending order (`a ≤ b ≤ c`). No triplet may appear twice. The triplets themselves can be in any order.",
+  "constraints": [
+   "0 ≤ len(nums) ≤ 3000",
+   "-10⁵ ≤ nums[i] ≤ 10⁵"
+  ],
+  "functionName": {
+   "python": "three_sum",
+   "javascript": "threeSum"
+  },
+  "params": [
+   "nums"
+  ],
+  "starter": {
+   "python": "def three_sum(nums):\n    pass\n",
+   "javascript": "function threeSum(nums) {\n  \n}\n"
+  },
+  "compare": "unordered",
+  "tests": [
+   {
+    "args": [
+     [
+      -1,
+      0,
+      1,
+      2,
+      -1,
+      -4
+     ]
+    ],
+    "expected": [
+     [
+      -1,
+      -1,
+      2
+     ],
+     [
+      -1,
+      0,
+      1
+     ]
+    ]
+   },
+   {
+    "args": [
+     [
+      0,
+      1,
+      1
+     ]
+    ],
+    "expected": []
+   },
+   {
+    "args": [
+     [
+      0,
+      0,
+      0
+     ]
+    ],
+    "expected": [
+     [
+      0,
+      0,
+      0
+     ]
+    ]
+   }
+  ],
+  "hiddenTests": [
+   {
+    "args": [
+     []
+    ],
+    "expected": []
+   },
+   {
+    "args": [
+     [
+      0,
+      0,
+      0,
+      0
+     ]
+    ],
+    "expected": [
+     [
+      0,
+      0,
+      0
+     ]
+    ]
+   },
+   {
+    "args": [
+     [
+      -2,
+      0,
+      1,
+      1,
+      2
+     ]
+    ],
+    "expected": [
+     [
+      -2,
+      0,
+      2
+     ],
+     [
+      -2,
+      1,
+      1
+     ]
+    ]
+   },
+   {
+    "args": [
+     [
+      -6,
+      -5,
+      4,
+      -6,
+      -4,
+      6,
+      -1
+     ]
+    ],
+    "expected": [
+     [
+      -5,
+      -1,
+      6
+     ]
+    ]
+   },
+   {
+    "args": [
+     [
+      0,
+      6,
+      -1,
+      2,
+      6,
+      -6,
+      4,
+      -4,
+      6,
+      -4,
+      -6
+     ]
+    ],
+    "expected": [
+     [
+      -6,
+      0,
+      6
+     ],
+     [
+      -6,
+      2,
+      4
+     ],
+     [
+      -4,
+      0,
+      4
+     ]
+    ]
+   },
+   {
+    "args": [
+     [
+      1,
+      -3,
+      3,
+      -1,
+      0,
+      -5,
+      -5,
+      -5,
+      4,
+      6,
+      -1,
+      0
+     ]
+    ],
+    "expected": [
+     [
+      -5,
+      -1,
+      6
+     ],
+     [
+      -5,
+      1,
+      4
+     ],
+     [
+      -3,
+      -1,
+      4
+     ],
+     [
+      -3,
+      0,
+      3
+     ],
+     [
+      -1,
+      0,
+      1
+     ]
+    ]
+   },
+   {
+    "args": [
+     [
+      -4,
+      3,
+      -5
+     ]
+    ],
+    "expected": []
+   },
+   {
+    "args": [
+     [
+      4,
+      6,
+      -2,
+      3,
+      -6
+     ]
+    ],
+    "expected": []
+   },
+   {
+    "args": [
+     [
+      3,
+      3,
+      -5,
+      6,
+      3,
+      4,
+      -2,
+      -5,
+      0,
+      0,
+      -1
+     ]
+    ],
+    "expected": [
+     [
+      -5,
+      -1,
+      6
+     ],
+     [
+      -2,
+      -1,
+      3
+     ]
+    ]
+   },
+   {
+    "args": [
+     [
+      -5,
+      -5,
+      5,
+      -6,
+      5,
+      0,
+      5,
+      6,
+      -2,
+      -3,
+      -5,
+      -6,
+      -4
+     ]
+    ],
+    "expected": [
+     [
+      -6,
+      0,
+      6
+     ],
+     [
+      -5,
+      0,
+      5
+     ],
+     [
+      -4,
+      -2,
+      6
+     ],
+     [
+      -3,
+      -2,
+      5
+     ]
+    ]
+   },
+   {
+    "args": [
+     [
+      2,
+      -2
+     ]
+    ],
+    "expected": []
+   },
+   {
+    "args": [
+     [
+      2,
+      3,
+      -3,
+      1,
+      1,
+      -5,
+      -6,
+      -3,
+      6
+     ]
+    ],
+    "expected": [
+     [
+      -5,
+      2,
+      3
+     ],
+     [
+      -3,
+      -3,
+      6
+     ],
+     [
+      -3,
+      1,
+      2
+     ]
+    ]
+   }
+  ],
+  "mentorNotes": {
+   "keyInsight": "Sort first. Fix one value, then the remaining two form a sorted pair-sum problem solved with two pointers. Sorting also makes skipping duplicates easy.",
+   "bruteForce": "Try every triple and deduplicate with a set: O(n³).",
+   "optimal": "Sort, then for each i run two pointers on the rest, skipping repeated values: O(n²) time.",
+   "commonMistakes": [
+    "Returning duplicate triplets",
+    "Skipping duplicates before using the first occurrence",
+    "Not sorting each triplet"
+   ],
+   "edgeCases": [
+    "All zeros",
+    "Fewer than three numbers",
+    "Many repeated values"
+   ]
+  }
+ },
+ {
+  "slug": "container-most-water",
+  "title": "Widest Water Tank",
+  "difficulty": "medium",
+  "topic": "two-pointers",
+  "pattern": "Greedy converging pointers",
+  "statement": "`heights[i]` is the height of a vertical wall at position `i`. Pick two walls; together with the ground they hold water up to the height of the shorter wall.\n\nReturn the largest amount of water any pair can hold: `min(heights[i], heights[j]) * (j - i)`.",
+  "constraints": [
+   "2 ≤ len(heights) ≤ 10⁵",
+   "0 ≤ heights[i] ≤ 10⁴"
+  ],
+  "functionName": {
+   "python": "max_water",
+   "javascript": "maxWater"
+  },
+  "params": [
+   "heights"
+  ],
+  "starter": {
+   "python": "def max_water(heights):\n    pass\n",
+   "javascript": "function maxWater(heights) {\n  \n}\n"
+  },
+  "compare": "exact",
+  "tests": [
+   {
+    "args": [
+     [
+      1,
+      8,
+      6,
+      2,
+      5,
+      4,
+      8,
+      3,
+      7
+     ]
+    ],
+    "expected": 49
+   },
+   {
+    "args": [
+     [
+      1,
+      1
+     ]
+    ],
+    "expected": 1
+   },
+   {
+    "args": [
+     [
+      4,
+      3,
+      2,
+      1,
+      4
+     ]
+    ],
+    "expected": 16
+   }
+  ],
+  "hiddenTests": [
+   {
+    "args": [
+     [
+      0,
+      0
+     ]
+    ],
+    "expected": 0
+   },
+   {
+    "args": [
+     [
+      1,
+      2,
+      1
+     ]
+    ],
+    "expected": 2
+   },
+   {
+    "args": [
+     [
+      2,
+      3,
+      10,
+      5,
+      7,
+      8,
+      9
+     ]
+    ],
+    "expected": 36
+   },
+   {
+    "args": [
+     [
+      9,
+      9,
+      6,
+      10,
+      2,
+      10,
+      6,
+      12,
+      3,
+      12,
+      12,
+      5
+     ]
+    ],
+    "expected": 90
+   },
+   {
+    "args": [
+     [
+      6,
+      10,
+      10,
+      0,
+      10,
+      10,
+      1
+     ]
+    ],
+    "expected": 40
+   },
+   {
+    "args": [
+     [
+      4,
+      4,
+      7,
+      2,
+      1,
+      9,
+      11,
+      0
+     ]
+    ],
+    "expected": 28
+   },
+   {
+    "args": [
+     [
+      7,
+      1,
+      12,
+      5,
+      3,
+      11,
+      3,
+      3,
+      4
+     ]
+    ],
+    "expected": 35
+   },
+   {
+    "args": [
+     [
+      12,
+      0,
+      9,
+      3
+     ]
+    ],
+    "expected": 18
+   },
+   {
+    "args": [
+     [
+      11,
+      8,
+      11,
+      11,
+      8,
+      9,
+      10,
+      0,
+      8,
+      8,
+      3,
+      11,
+      2
+     ]
+    ],
+    "expected": 121
+   },
+   {
+    "args": [
+     [
+      10,
+      9,
+      1,
+      7,
+      3,
+      1,
+      11,
+      3,
+      8,
+      2,
+      10,
+      5,
+      10,
+      12,
+      9
+     ]
+    ],
+    "expected": 130
+   },
+   {
+    "args": [
+     [
+      1,
+      11,
+      4,
+      10,
+      10,
+      5,
+      2,
+      10,
+      2
+     ]
+    ],
+    "expected": 60
+   },
+   {
+    "args": [
+     [
+      9,
+      1,
+      8,
+      0,
+      7,
+      5,
+      1,
+      12,
+      1,
+      10,
+      0,
+      7
+     ]
+    ],
+    "expected": 81
+   }
+  ],
+  "mentorNotes": {
+   "keyInsight": "Start with the widest pair. The shorter wall limits the area, so moving the taller wall inward can never help; always move the shorter one.",
+   "bruteForce": "Check every pair: O(n²).",
+   "optimal": "Two pointers from both ends, moving the shorter wall: O(n).",
+   "commonMistakes": [
+    "Moving the taller wall",
+    "Using the taller wall's height in the area"
+   ],
+   "edgeCases": [
+    "Zero heights",
+    "Equal heights"
+   ]
+  }
+ },
+ {
+  "slug": "max-sum-window-k",
+  "title": "Max Sum Window of K",
+  "difficulty": "easy",
+  "topic": "sliding-window",
+  "pattern": "Fixed-size sliding window",
+  "statement": "Given a list of integers `nums` and an integer `k`, return the largest sum of any `k` consecutive elements.",
+  "constraints": [
+   "1 ≤ k ≤ len(nums) ≤ 10⁵",
+   "-10⁴ ≤ nums[i] ≤ 10⁴"
+  ],
+  "functionName": {
+   "python": "max_window_sum",
+   "javascript": "maxWindowSum"
+  },
+  "params": [
+   "nums",
+   "k"
+  ],
+  "starter": {
+   "python": "def max_window_sum(nums, k):\n    pass\n",
+   "javascript": "function maxWindowSum(nums, k) {\n  \n}\n"
+  },
+  "compare": "exact",
+  "tests": [
+   {
+    "args": [
+     [
+      2,
+      1,
+      5,
+      1,
+      3,
+      2
+     ],
+     3
+    ],
+    "expected": 9
+   },
+   {
+    "args": [
+     [
+      5
+     ],
+     1
+    ],
+    "expected": 5
+   },
+   {
+    "args": [
+     [
+      -1,
+      -2,
+      -3
+     ],
+     2
+    ],
+    "expected": -3
+   }
+  ],
+  "hiddenTests": [
+   {
+    "args": [
+     [
+      4,
+      -1,
+      4
+     ],
+     3
+    ],
+    "expected": 7
+   },
+   {
+    "args": [
+     [
+      0,
+      0,
+      0
+     ],
+     1
+    ],
+    "expected": 0
+   },
+   {
+    "args": [
+     [
+      -4,
+      -2,
+      4,
+      -3,
+      -1,
+      7,
+      5,
+      7,
+      -10,
+      13,
+      7,
+      9
+     ],
+     10
+    ],
+    "expected": 38
+   },
+   {
+    "args": [
+     [
+      10,
+      3,
+      5,
+      -4
+     ],
+     4
+    ],
+    "expected": 14
+   },
+   {
+    "args": [
+     [
+      -6,
+      -3,
+      5
+     ],
+     1
+    ],
+    "expected": 5
+   },
+   {
+    "args": [
+     [
+      2,
+      14,
+      15,
+      -7,
+      12,
+      -10,
+      14,
+      1
+     ],
+     4
+    ],
+    "expected": 34
+   },
+   {
+    "args": [
+     [
+      15,
+      3,
+      -7,
+      13,
+      -2,
+      0,
+      12,
+      9,
+      7
+     ],
+     9
+    ],
+    "expected": 50
+   },
+   {
+    "args": [
+     [
+      1,
+      -5,
+      15,
+      -8,
+      4,
+      11,
+      6
+     ],
+     4
+    ],
+    "expected": 22
+   },
+   {
+    "args": [
+     [
+      -8,
+      -1,
+      0,
+      13,
+      3,
+      -3,
+      10,
+      -6,
+      1,
+      9,
+      -6,
+      -9,
+      14
+     ],
+     2
+    ],
+    "expected": 16
+   },
+   {
+    "args": [
+     [
+      -9,
+      0,
+      -3,
+      -10,
+      -10,
+      11,
+      -5,
+      -10
+     ],
+     4
+    ],
+    "expected": -12
+   },
+   {
+    "args": [
+     [
+      2,
+      -5,
+      -8,
+      -5,
+      0,
+      12
+     ],
+     2
+    ],
+    "expected": 12
+   },
+   {
+    "args": [
+     [
+      15,
+      -3,
+      3,
+      10,
+      -2,
+      14,
+      -4,
+      1
+     ],
+     5
+    ],
+    "expected": 23
+   }
+  ],
+  "mentorNotes": {
+   "keyInsight": "Neighbouring windows share k-1 elements. Add the one that enters and subtract the one that leaves instead of re-summing.",
+   "bruteForce": "Sum every window from scratch: O(n·k).",
+   "optimal": "Keep a running window sum: O(n) time, O(1) space.",
+   "commonMistakes": [
+    "Starting best at 0 when all numbers are negative",
+    "Off-by-one when removing the leaving element"
+   ],
+   "edgeCases": [
+    "k = 1",
+    "k = len(nums)",
+    "All negative"
+   ]
+  }
+ },
+ {
+  "slug": "longest-unique-stretch",
+  "title": "Longest Unique Stretch",
+  "difficulty": "medium",
+  "topic": "sliding-window",
+  "pattern": "Variable-size sliding window",
+  "statement": "Given a string `s`, return the length of the longest substring in which no character repeats.",
+  "constraints": [
+   "0 ≤ len(s) ≤ 5·10⁴",
+   "Letters, digits, symbols and spaces"
+  ],
+  "functionName": {
+   "python": "longest_unique",
+   "javascript": "longestUnique"
+  },
+  "params": [
+   "s"
+  ],
+  "starter": {
+   "python": "def longest_unique(s):\n    pass\n",
+   "javascript": "function longestUnique(s) {\n  \n}\n"
+  },
+  "compare": "exact",
+  "tests": [
+   {
+    "args": [
+     "abcabcbb"
+    ],
+    "expected": 3
+   },
+   {
+    "args": [
+     "bbbbb"
+    ],
+    "expected": 1
+   },
+   {
+    "args": [
+     "pwwkew"
+    ],
+    "expected": 3
+   },
+   {
+    "args": [
+     "abba"
+    ],
+    "expected": 2
+   }
+  ],
+  "hiddenTests": [
+   {
+    "args": [
+     ""
+    ],
+    "expected": 0
+   },
+   {
+    "args": [
+     " "
+    ],
+    "expected": 1
+   },
+   {
+    "args": [
+     "dvdf"
+    ],
+    "expected": 3
+   },
+   {
+    "args": [
+     "tmmzuxt"
+    ],
+    "expected": 5
+   },
+   {
+    "args": [
+     "au"
+    ],
+    "expected": 2
+   },
+   {
+    "args": [
+     "dbcbdccaadcb"
+    ],
+    "expected": 4
+   },
+   {
+    "args": [
+     "a"
+    ],
+    "expected": 1
+   },
+   {
+    "args": [
+     "d"
+    ],
+    "expected": 1
+   },
+   {
+    "args": [
+     "b"
+    ],
+    "expected": 1
+   },
+   {
+    "args": [
+     "caab"
+    ],
+    "expected": 2
+   },
+   {
+    "args": [
+     "aadbbdbbad"
+    ],
+    "expected": 3
+   },
+   {
+    "args": [
+     "aadaadbcdcabd"
+    ],
+    "expected": 4
+   }
+  ],
+  "mentorNotes": {
+   "keyInsight": "Keep a window with no repeats. When a repeat enters, jump the left edge just past the earlier copy, but never move it backwards: left = max(left, last[ch] + 1).",
+   "bruteForce": "Check every substring for repeats: O(n³), or O(n²) with a set.",
+   "optimal": "Sliding window with a map of last-seen index: O(n) time, O(k) space for k distinct characters.",
+   "commonMistakes": [
+    "Moving left backwards when the earlier copy is already outside the window (abba)",
+    "Window length off by one (right - left + 1)"
+   ],
+   "edgeCases": [
+    "Empty string",
+    "All same character",
+    "abba",
+    "Space characters"
+   ]
+  }
+ },
+ {
+  "slug": "best-time-buy-sell",
+  "title": "One Trade Profit",
+  "difficulty": "easy",
+  "topic": "sliding-window",
+  "pattern": "Running minimum",
+  "statement": "`prices[i]` is a stock's price on day `i`. You may buy once and later sell once. Return the maximum profit, or `0` if no profitable trade exists.",
+  "constraints": [
+   "1 ≤ len(prices) ≤ 10⁵",
+   "0 ≤ prices[i] ≤ 10⁴"
+  ],
+  "functionName": {
+   "python": "max_profit",
+   "javascript": "maxProfit"
+  },
+  "params": [
+   "prices"
+  ],
+  "starter": {
+   "python": "def max_profit(prices):\n    pass\n",
+   "javascript": "function maxProfit(prices) {\n  \n}\n"
+  },
+  "compare": "exact",
+  "tests": [
+   {
+    "args": [
+     [
+      7,
+      1,
+      5,
+      3,
+      6,
+      4
+     ]
+    ],
+    "expected": 5
+   },
+   {
+    "args": [
+     [
+      7,
+      6,
+      4,
+      3,
+      1
+     ]
+    ],
+    "expected": 0
+   },
+   {
+    "args": [
+     [
+      2,
+      4,
+      1
+     ]
+    ],
+    "expected": 2
+   }
+  ],
+  "hiddenTests": [
+   {
+    "args": [
+     [
+      5
+     ]
+    ],
+    "expected": 0
+   },
+   {
+    "args": [
+     [
+      1,
+      2
+     ]
+    ],
+    "expected": 1
+   },
+   {
+    "args": [
+     [
+      3,
+      3,
+      3
+     ]
+    ],
+    "expected": 0
+   },
+   {
+    "args": [
+     [
+      4,
+      9,
+      11,
+      6,
+      7,
+      12,
+      0,
+      19,
+      1
+     ]
+    ],
+    "expected": 19
+   },
+   {
+    "args": [
+     [
+      7,
+      19,
+      6
+     ]
+    ],
+    "expected": 12
+   },
+   {
+    "args": [
+     [
+      12,
+      0,
+      10,
+      5,
+      16,
+      5,
+      18,
+      7,
+      9,
+      9
+     ]
+    ],
+    "expected": 18
+   },
+   {
+    "args": [
+     [
+      19,
+      4,
+      1,
+      18,
+      19,
+      13,
+      13,
+      14,
+      12,
+      0,
+      16,
+      3,
+      6
+     ]
+    ],
+    "expected": 18
+   },
+   {
+    "args": [
+     [
+      14,
+      15,
+      15,
+      7,
+      7,
+      20,
+      11,
+      19,
+      11,
+      10,
+      13,
+      20,
+      8,
+      10
+     ]
+    ],
+    "expected": 13
+   },
+   {
+    "args": [
+     [
+      9,
+      6,
+      16,
+      12,
+      1,
+      4,
+      10,
+      6,
+      18,
+      19,
+      11,
+      3,
+      13,
+      18
+     ]
+    ],
+    "expected": 18
+   },
+   {
+    "args": [
+     [
+      6,
+      6,
+      18,
+      10,
+      3,
+      8,
+      9,
+      16
+     ]
+    ],
+    "expected": 13
+   },
+   {
+    "args": [
+     [
+      3,
+      17
+     ]
+    ],
+    "expected": 14
+   },
+   {
+    "args": [
+     [
+      14,
+      11,
+      17,
+      18,
+      9,
+      6,
+      6
+     ]
+    ],
+    "expected": 7
+   }
+  ],
+  "mentorNotes": {
+   "keyInsight": "For each selling day, the best buy is the cheapest price seen before it. Track that minimum as you go.",
+   "bruteForce": "Try every buy/sell pair: O(n²).",
+   "optimal": "One pass keeping the minimum so far: O(n) time, O(1) space.",
+   "commonMistakes": [
+    "Using global max - global min (selling before buying)",
+    "Returning a negative profit"
+   ],
+   "edgeCases": [
+    "Single day",
+    "Strictly decreasing prices"
+   ]
+  }
+ },
+ {
+  "slug": "longest-repeat-replace",
+  "title": "Longest Repeat With Edits",
+  "difficulty": "medium",
+  "topic": "sliding-window",
+  "pattern": "Variable window with a validity condition",
+  "statement": "`s` contains only uppercase letters. You may change at most `k` characters to any other uppercase letter. Return the length of the longest substring that can be made of a single repeated letter.",
+  "constraints": [
+   "1 ≤ len(s) ≤ 10⁵",
+   "0 ≤ k ≤ len(s)"
+  ],
+  "functionName": {
+   "python": "longest_repeat",
+   "javascript": "longestRepeat"
+  },
+  "params": [
+   "s",
+   "k"
+  ],
+  "starter": {
+   "python": "def longest_repeat(s, k):\n    pass\n",
+   "javascript": "function longestRepeat(s, k) {\n  \n}\n"
+  },
+  "compare": "exact",
+  "tests": [
+   {
+    "args": [
+     "ABAB",
+     2
+    ],
+    "expected": 4
+   },
+   {
+    "args": [
+     "AABABBA",
+     1
+    ],
+    "expected": 4
+   },
+   {
+    "args": [
+     "AAAA",
+     0
+    ],
+    "expected": 4
+   }
+  ],
+  "hiddenTests": [
+   {
+    "args": [
+     "A",
+     0
+    ],
+    "expected": 1
+   },
+   {
+    "args": [
+     "ABC",
+     0
+    ],
+    "expected": 1
+   },
+   {
+    "args": [
+     "ABCDE",
+     5
+    ],
+    "expected": 5
+   },
+   {
+    "args": [
+     "CBCABBBABB",
+     1
+    ],
+    "expected": 6
+   },
+   {
+    "args": [
+     "A",
+     1
+    ],
+    "expected": 1
+   },
+   {
+    "args": [
+     "ACABBAAABBBAA",
+     0
+    ],
+    "expected": 3
+   },
+   {
+    "args": [
+     "CAAAB",
+     0
+    ],
+    "expected": 3
+   },
+   {
+    "args": [
+     "ABAACBBCCAAC",
+     0
+    ],
+    "expected": 2
+   },
+   {
+    "args": [
+     "AABCBCBBCBBBAC",
+     3
+    ],
+    "expected": 10
+   },
+   {
+    "args": [
+     "AC",
+     2
+    ],
+    "expected": 2
+   },
+   {
+    "args": [
+     "CBBBCAAABB",
+     3
+    ],
+    "expected": 6
+   },
+   {
+    "args": [
+     "ACCC",
+     0
+    ],
+    "expected": 3
+   }
+  ],
+  "mentorNotes": {
+   "keyInsight": "A window is fixable when (window length − count of its most common letter) ≤ k. Grow the window, and shrink from the left only when that breaks.",
+   "bruteForce": "Check every substring with letter counts: O(n²·26).",
+   "optimal": "Sliding window with letter counts and the max count: O(n).",
+   "commonMistakes": [
+    "Shrinking with a while loop that over-shrinks",
+    "Forgetting k can be 0"
+   ],
+   "edgeCases": [
+    "k = 0",
+    "k ≥ len(s)",
+    "Single character"
+   ]
+  }
+ },
+ {
+  "slug": "balanced-brackets",
+  "title": "Balanced Brackets",
+  "difficulty": "easy",
+  "topic": "stack",
+  "pattern": "Stack of open brackets",
+  "statement": "`s` contains only the characters `()[]{}`. Return `true` if every opening bracket is closed by the same type of bracket, in the correct order.",
+  "constraints": [
+   "0 ≤ len(s) ≤ 10⁴"
+  ],
+  "functionName": {
+   "python": "is_balanced",
+   "javascript": "isBalanced"
+  },
+  "params": [
+   "s"
+  ],
+  "starter": {
+   "python": "def is_balanced(s):\n    pass\n",
+   "javascript": "function isBalanced(s) {\n  \n}\n"
+  },
+  "compare": "exact",
+  "tests": [
+   {
+    "args": [
+     "()[]{}"
+    ],
+    "expected": true
+   },
+   {
+    "args": [
+     "([)]"
+    ],
+    "expected": false
+   },
+   {
+    "args": [
+     "{[]}"
+    ],
+    "expected": true
+   }
+  ],
+  "hiddenTests": [
+   {
+    "args": [
+     ""
+    ],
+    "expected": true
+   },
+   {
+    "args": [
+     "("
+    ],
+    "expected": false
+   },
+   {
+    "args": [
+     ")("
+    ],
+    "expected": false
+   },
+   {
+    "args": [
+     "(("
+    ],
+    "expected": false
+   },
+   {
+    "args": [
+     "]"
+    ],
+    "expected": false
+   },
+   {
+    "args": [
+     "]}[}]]))"
+    ],
+    "expected": false
+   },
+   {
+    "args": [
+     "{[({})]}"
+    ],
+    "expected": true
+   },
+   {
+    "args": [
+     "[}}]"
+    ],
+    "expected": false
+   },
+   {
+    "args": [
+     "()"
+    ],
+    "expected": true
+   },
+   {
+    "args": [
+     "}{"
+    ],
+    "expected": false
+   },
+   {
+    "args": [
+     "{]{}]"
+    ],
+    "expected": false
+   },
+   {
+    "args": [
+     "[]"
+    ],
+    "expected": true
+   }
+  ],
+  "mentorNotes": {
+   "keyInsight": "The most recent unclosed bracket must be closed first, which is exactly last-in, first-out: a stack.",
+   "bruteForce": "Repeatedly delete adjacent matching pairs until nothing changes: O(n²).",
+   "optimal": "Push openers; on a closer, the top must match. Empty at the end. O(n).",
+   "commonMistakes": [
+    "Counting brackets instead of ordering them (fails ([)])",
+    "Popping an empty stack",
+    "Not checking the stack is empty at the end"
+   ],
+   "edgeCases": [
+    "Empty string",
+    "Starts with a closer",
+    "Only openers"
+   ]
+  }
+ },
+ {
+  "slug": "next-warmer-day",
+  "title": "Next Warmer Day",
+  "difficulty": "medium",
+  "topic": "stack",
+  "pattern": "Monotonic stack",
+  "statement": "`temps[i]` is the temperature on day `i`. For each day, return how many days you must wait for a strictly warmer day. Use `0` if no warmer day comes.",
+  "constraints": [
+   "1 ≤ len(temps) ≤ 10⁵",
+   "30 ≤ temps[i] ≤ 100"
+  ],
+  "functionName": {
+   "python": "days_until_warmer",
+   "javascript": "daysUntilWarmer"
+  },
+  "params": [
+   "temps"
+  ],
+  "starter": {
+   "python": "def days_until_warmer(temps):\n    pass\n",
+   "javascript": "function daysUntilWarmer(temps) {\n  \n}\n"
+  },
+  "compare": "exact",
+  "tests": [
+   {
+    "args": [
+     [
+      73,
+      74,
+      75,
+      71,
+      69,
+      72,
+      76,
+      73
+     ]
+    ],
+    "expected": [
+     1,
+     1,
+     4,
+     2,
+     1,
+     1,
+     0,
+     0
+    ]
+   },
+   {
+    "args": [
+     [
+      30,
+      40,
+      50,
+      60
+     ]
+    ],
+    "expected": [
+     1,
+     1,
+     1,
+     0
+    ]
+   },
+   {
+    "args": [
+     [
+      30,
+      60,
+      90
+     ]
+    ],
+    "expected": [
+     1,
+     1,
+     0
+    ]
+   }
+  ],
+  "hiddenTests": [
+   {
+    "args": [
+     [
+      50
+     ]
+    ],
+    "expected": [
+     0
+    ]
+   },
+   {
+    "args": [
+     [
+      70,
+      70,
+      70
+     ]
+    ],
+    "expected": [
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "args": [
+     [
+      90,
+      80,
+      70,
+      100
+     ]
+    ],
+    "expected": [
+     3,
+     2,
+     1,
+     0
+    ]
+   },
+   {
+    "args": [
+     [
+      34,
+      37,
+      40,
+      39,
+      41,
+      44,
+      39,
+      42,
+      39,
+      45,
+      39
+     ]
+    ],
+    "expected": [
+     1,
+     1,
+     2,
+     1,
+     1,
+     4,
+     1,
+     2,
+     1,
+     0,
+     0
+    ]
+   },
+   {
+    "args": [
+     [
+      45,
+      33,
+      41,
+      31,
+      45,
+      44,
+      34,
+      32,
+      34,
+      33,
+      38,
+      39,
+      40
+     ]
+    ],
+    "expected": [
+     0,
+     1,
+     2,
+     1,
+     0,
+     0,
+     4,
+     1,
+     2,
+     1,
+     1,
+     1,
+     0
+    ]
+   },
+   {
+    "args": [
+     [
+      41,
+      32,
+      33,
+      31,
+      31,
+      38,
+      36,
+      40,
+      36,
+      36,
+      40,
+      33,
+      40,
+      40,
+      30
+     ]
+    ],
+    "expected": [
+     0,
+     1,
+     3,
+     2,
+     1,
+     2,
+     1,
+     0,
+     2,
+     1,
+     0,
+     1,
+     0,
+     0,
+     0
+    ]
+   },
+   {
+    "args": [
+     [
+      31,
+      42,
+      39,
+      31,
+      39,
+      42,
+      37,
+      37,
+      40,
+      41,
+      40,
+      40,
+      44,
+      38,
+      42
+     ]
+    ],
+    "expected": [
+     1,
+     11,
+     3,
+     1,
+     1,
+     7,
+     2,
+     1,
+     1,
+     3,
+     2,
+     1,
+     0,
+     1,
+     0
+    ]
+   },
+   {
+    "args": [
+     [
+      44,
+      37,
+      36,
+      37,
+      36,
+      36,
+      44,
+      43,
+      34,
+      44,
+      40,
+      38,
+      35,
+      44,
+      30
+     ]
+    ],
+    "expected": [
+     0,
+     5,
+     1,
+     3,
+     2,
+     1,
+     0,
+     2,
+     1,
+     0,
+     3,
+     2,
+     1,
+     0,
+     0
+    ]
+   },
+   {
+    "args": [
+     [
+      30,
+      34,
+      34,
+      41,
+      32,
+      37,
+      34,
+      32,
+      35,
+      30,
+      33
+     ]
+    ],
+    "expected": [
+     1,
+     2,
+     1,
+     0,
+     1,
+     0,
+     2,
+     1,
+     0,
+     1,
+     0
+    ]
+   },
+   {
+    "args": [
+     [
+      36,
+      32,
+      39,
+      31,
+      43
+     ]
+    ],
+    "expected": [
+     2,
+     1,
+     2,
+     1,
+     0
+    ]
+   },
+   {
+    "args": [
+     [
+      44,
+      43,
+      40,
+      35,
+      34,
+      45
+     ]
+    ],
+    "expected": [
+     5,
+     4,
+     3,
+     2,
+     1,
+     0
+    ]
+   },
+   {
+    "args": [
+     [
+      41,
+      40,
+      37,
+      41,
+      40,
+      33,
+      36,
+      36,
+      33
+     ]
+    ],
+    "expected": [
+     0,
+     2,
+     1,
+     0,
+     0,
+     1,
+     0,
+     0,
+     0
+    ]
+   }
+  ],
+  "mentorNotes": {
+   "keyInsight": "Keep a stack of days still waiting for a warmer day; their temperatures are decreasing. Each new day resolves every waiting day colder than it.",
+   "bruteForce": "For each day scan forward: O(n²).",
+   "optimal": "Monotonic decreasing stack of indices: each index is pushed and popped once, O(n).",
+   "commonMistakes": [
+    "Storing temperatures instead of indices",
+    "Treating equal temperatures as warmer"
+   ],
+   "edgeCases": [
+    "Single day",
+    "All equal",
+    "Strictly decreasing then a peak"
+   ]
+  }
+ },
+ {
+  "slug": "evaluate-rpn",
+  "title": "Postfix Calculator",
+  "difficulty": "medium",
+  "topic": "stack",
+  "pattern": "Operand stack",
+  "statement": "`tokens` is an arithmetic expression in postfix (Reverse Polish) notation: each operator `+ - * /` comes after its two operands. Return the value as an integer.\n\nDivision truncates toward zero (`7 / -2 = -3`). The expression is always valid and never divides by zero.",
+  "constraints": [
+   "1 ≤ len(tokens) ≤ 10⁴",
+   "Operands are integers in [-200, 200]"
+  ],
+  "functionName": {
+   "python": "eval_rpn",
+   "javascript": "evalRpn"
+  },
+  "params": [
+   "tokens"
+  ],
+  "starter": {
+   "python": "def eval_rpn(tokens):\n    pass\n",
+   "javascript": "function evalRpn(tokens) {\n  \n}\n"
+  },
+  "compare": "exact",
+  "tests": [
+   {
+    "args": [
+     [
+      "2",
+      "1",
+      "+",
+      "3",
+      "*"
+     ]
+    ],
+    "expected": 9
+   },
+   {
+    "args": [
+     [
+      "4",
+      "13",
+      "5",
+      "/",
+      "+"
+     ]
+    ],
+    "expected": 6
+   },
+   {
+    "args": [
+     [
+      "10",
+      "6",
+      "9",
+      "3",
+      "+",
+      "-11",
+      "*",
+      "/",
+      "*",
+      "17",
+      "+",
+      "5",
+      "+"
+     ]
+    ],
+    "expected": 22
+   }
+  ],
+  "hiddenTests": [
+   {
+    "args": [
+     [
+      "3"
+     ]
+    ],
+    "expected": 3
+   },
+   {
+    "args": [
+     [
+      "7",
+      "-2",
+      "/"
+     ]
+    ],
+    "expected": -3
+   },
+   {
+    "args": [
+     [
+      "-7",
+      "2",
+      "/"
+     ]
+    ],
+    "expected": -3
+   },
+   {
+    "args": [
+     [
+      "5",
+      "8",
+      "-"
+     ]
+    ],
+    "expected": -3
+   },
+   {
+    "args": [
+     [
+      "-4",
+      "0",
+      "+"
+     ]
+    ],
+    "expected": -4
+   },
+   {
+    "args": [
+     [
+      "11"
+     ]
+    ],
+    "expected": 11
+   },
+   {
+    "args": [
+     [
+      "4",
+      "7",
+      "-",
+      "-8",
+      "/",
+      "8",
+      "4",
+      "/",
+      "3",
+      "-1",
+      "+",
+      "/",
+      "/"
+     ]
+    ],
+    "expected": 0
+   },
+   {
+    "args": [
+     [
+      "-2",
+      "12",
+      "*"
+     ]
+    ],
+    "expected": -24
+   },
+   {
+    "args": [
+     [
+      "9"
+     ]
+    ],
+    "expected": 9
+   },
+   {
+    "args": [
+     [
+      "7"
+     ]
+    ],
+    "expected": 7
+   },
+   {
+    "args": [
+     [
+      "11",
+      "-2",
+      "*"
+     ]
+    ],
+    "expected": -22
+   },
+   {
+    "args": [
+     [
+      "12",
+      "7",
+      "+"
+     ]
+    ],
+    "expected": 19
+   }
+  ],
+  "mentorNotes": {
+   "keyInsight": "Operands wait on a stack until an operator arrives; the operator always applies to the two most recent values.",
+   "bruteForce": "Repeatedly find the first operator, evaluate it in place and rebuild the list: O(n²).",
+   "optimal": "One pass with a stack: O(n).",
+   "commonMistakes": [
+    "Swapping operand order for - and /",
+    "Python // floors toward −∞; use int(a / b)",
+    "Treating '-11' as an operator"
+   ],
+   "edgeCases": [
+    "Single number",
+    "Negative division",
+    "Negative operands"
+   ]
+  }
+ },
+ {
+  "slug": "remove-adjacent-duplicates",
+  "title": "Pair Eraser",
+  "difficulty": "easy",
+  "topic": "stack",
+  "pattern": "Stack as a cancelling buffer",
+  "statement": "Given a string `s` of lowercase letters, repeatedly delete any two adjacent equal letters until no such pair is left. Return the final string (the result is unique).",
+  "constraints": [
+   "1 ≤ len(s) ≤ 10⁵"
+  ],
+  "functionName": {
+   "python": "remove_pairs",
+   "javascript": "removePairs"
+  },
+  "params": [
+   "s"
+  ],
+  "starter": {
+   "python": "def remove_pairs(s):\n    pass\n",
+   "javascript": "function removePairs(s) {\n  \n}\n"
+  },
+  "compare": "exact",
+  "tests": [
+   {
+    "args": [
+     "abbaca"
+    ],
+    "expected": "ca"
+   },
+   {
+    "args": [
+     "azxxzy"
+    ],
+    "expected": "ay"
+   },
+   {
+    "args": [
+     "aa"
+    ],
+    "expected": ""
+   }
+  ],
+  "hiddenTests": [
+   {
+    "args": [
+     "a"
+    ],
+    "expected": "a"
+   },
+   {
+    "args": [
+     "abba"
+    ],
+    "expected": ""
+   },
+   {
+    "args": [
+     "abcabc"
+    ],
+    "expected": "abcabc"
+   },
+   {
+    "args": [
+     "cbcbbba"
+    ],
+    "expected": "cbcba"
+   },
+   {
+    "args": [
+     "aaacaacbbbbcb"
+    ],
+    "expected": "acb"
+   },
+   {
+    "args": [
+     "acabaacbc"
+    ],
+    "expected": "acabcbc"
+   },
+   {
+    "args": [
+     "aab"
+    ],
+    "expected": "b"
+   },
+   {
+    "args": [
+     "ba"
+    ],
+    "expected": "ba"
+   },
+   {
+    "args": [
+     "bcbabcb"
+    ],
+    "expected": "bcbabcb"
+   },
+   {
+    "args": [
+     "cc"
+    ],
+    "expected": ""
+   },
+   {
+    "args": [
+     "caaca"
+    ],
+    "expected": "a"
+   },
+   {
+    "args": [
+     "bcaacbacbaccb"
+    ],
+    "expected": "acbab"
+   }
+  ],
+  "mentorNotes": {
+   "keyInsight": "A new letter can only cancel with the letter just before it in the cleaned result, which is the top of a stack.",
+   "bruteForce": "Scan and delete one pair at a time until stable: O(n²).",
+   "optimal": "Stack: pop if the top equals the current letter, else push. O(n).",
+   "commonMistakes": [
+    "Only one pass of deletion (misses cascades like abba)"
+   ],
+   "edgeCases": [
+    "Everything cancels",
+    "Nothing cancels"
+   ]
+  }
+ },
+ {
+  "slug": "binary-search-index",
+  "title": "Find in Sorted List",
+  "difficulty": "easy",
+  "topic": "binary-search",
+  "pattern": "Classic binary search",
+  "statement": "`nums` is sorted in ascending order with no duplicates. Return the index of `target`, or `-1` if it is not present.\n\nAim for O(log n) time.",
+  "constraints": [
+   "0 ≤ len(nums) ≤ 10⁴",
+   "All values are distinct"
+  ],
+  "functionName": {
+   "python": "search",
+   "javascript": "search"
+  },
+  "params": [
+   "nums",
+   "target"
+  ],
+  "starter": {
+   "python": "def search(nums, target):\n    pass\n",
+   "javascript": "function search(nums, target) {\n  \n}\n"
+  },
+  "compare": "exact",
+  "tests": [
+   {
+    "args": [
+     [
+      -1,
+      0,
+      3,
+      5,
+      9,
+      12
+     ],
+     9
+    ],
+    "expected": 4
+   },
+   {
+    "args": [
+     [
+      -1,
+      0,
+      3,
+      5,
+      9,
+      12
+     ],
+     2
+    ],
+    "expected": -1
+   },
+   {
+    "args": [
+     [
+      5
+     ],
+     5
+    ],
+    "expected": 0
+   }
+  ],
+  "hiddenTests": [
+   {
+    "args": [
+     [],
+     1
+    ],
+    "expected": -1
+   },
+   {
+    "args": [
+     [
+      1,
+      2
+     ],
+     2
+    ],
+    "expected": 1
+   },
+   {
+    "args": [
+     [
+      1,
+      2
+     ],
+     0
+    ],
+    "expected": -1
+   },
+   {
+    "args": [
+     [
+      1,
+      2,
+      3
+     ],
+     4
+    ],
+    "expected": -1
+   },
+   {
+    "args": [
+     [
+      -28,
+      -27,
+      -21,
+      -8,
+      -7,
+      0,
+      17,
+      22,
+      27,
+      33,
+      34
+     ],
+     -28
+    ],
+    "expected": 0
+   },
+   {
+    "args": [
+     [
+      -14,
+      -11,
+      -10,
+      5,
+      6,
+      9,
+      34
+     ],
+     34
+    ],
+    "expected": 6
+   },
+   {
+    "args": [
+     [
+      -28,
+      -25,
+      -19,
+      16,
+      18,
+      20,
+      26
+     ],
+     3
+    ],
+    "expected": -1
+   },
+   {
+    "args": [
+     [
+      -26,
+      26
+     ],
+     -16
+    ],
+    "expected": -1
+   },
+   {
+    "args": [
+     [
+      -26,
+      -19,
+      -14,
+      -4,
+      4,
+      13,
+      19,
+      26,
+      28,
+      39
+     ],
+     -9
+    ],
+    "expected": -1
+   },
+   {
+    "args": [
+     [
+      -27,
+      -19,
+      -9,
+      -8,
+      0,
+      4,
+      17,
+      32,
+      35,
+      36
+     ],
+     3
+    ],
+    "expected": -1
+   },
+   {
+    "args": [
+     [
+      -25,
+      -20,
+      -3,
+      0,
+      10,
+      23,
+      36
+     ],
+     36
+    ],
+    "expected": 6
+   },
+   {
+    "args": [
+     [],
+     -12
+    ],
+    "expected": -1
+   }
+  ],
+  "mentorNotes": {
+   "keyInsight": "Comparing with the middle element throws away half of the remaining range every step.",
+   "bruteForce": "Linear scan: O(n).",
+   "optimal": "Binary search with lo <= hi: O(log n).",
+   "commonMistakes": [
+    "lo < hi vs lo <= hi mismatch",
+    "Infinite loop from lo = mid",
+    "Not handling an empty list"
+   ],
+   "edgeCases": [
+    "Empty list",
+    "Target at either end",
+    "Target outside the range"
+   ]
+  }
+ },
+ {
+  "slug": "search-insert-position",
+  "title": "Insert Position",
+  "difficulty": "easy",
+  "topic": "binary-search",
+  "pattern": "Lower bound",
+  "statement": "`nums` is sorted in ascending order with no duplicates. Return the index of `target` if present; otherwise return the index where it would be inserted to keep the list sorted.\n\nAim for O(log n) time.",
+  "constraints": [
+   "0 ≤ len(nums) ≤ 10⁴",
+   "All values are distinct"
+  ],
+  "functionName": {
+   "python": "insert_position",
+   "javascript": "insertPosition"
+  },
+  "params": [
+   "nums",
+   "target"
+  ],
+  "starter": {
+   "python": "def insert_position(nums, target):\n    pass\n",
+   "javascript": "function insertPosition(nums, target) {\n  \n}\n"
+  },
+  "compare": "exact",
+  "tests": [
+   {
+    "args": [
+     [
+      1,
+      3,
+      5,
+      6
+     ],
+     5
+    ],
+    "expected": 2
+   },
+   {
+    "args": [
+     [
+      1,
+      3,
+      5,
+      6
+     ],
+     2
+    ],
+    "expected": 1
+   },
+   {
+    "args": [
+     [
+      1,
+      3,
+      5,
+      6
+     ],
+     7
+    ],
+    "expected": 4
+   }
+  ],
+  "hiddenTests": [
+   {
+    "args": [
+     [
+      1
+     ],
+     0
+    ],
+    "expected": 0
+   },
+   {
+    "args": [
+     [],
+     3
+    ],
+    "expected": 0
+   },
+   {
+    "args": [
+     [
+      1,
+      3
+     ],
+     3
+    ],
+    "expected": 1
+   },
+   {
+    "args": [
+     [
+      2,
+      4,
+      6
+     ],
+     1
+    ],
+    "expected": 0
+   },
+   {
+    "args": [
+     [
+      -16,
+      -13,
+      -12,
+      -8,
+      15,
+      32,
+      36
+     ],
+     -8
+    ],
+    "expected": 3
+   },
+   {
+    "args": [
+     [
+      11,
+      19
+     ],
+     26
+    ],
+    "expected": 2
+   },
+   {
+    "args": [
+     [
+      -15,
+      -5,
+      -4,
+      -2,
+      1,
+      2,
+      4,
+      7,
+      11,
+      17,
+      24
+     ],
+     -5
+    ],
+    "expected": 1
+   },
+   {
+    "args": [
+     [
+      -24,
+      -18,
+      -9,
+      -6,
+      10,
+      12,
+      13,
+      17,
+      25,
+      33,
+      36
+     ],
+     10
+    ],
+    "expected": 4
+   },
+   {
+    "args": [
+     [
+      -26,
+      -19,
+      -6,
+      18,
+      22,
+      25
+     ],
+     -11
+    ],
+    "expected": 2
+   },
+   {
+    "args": [
+     [
+      -29,
+      -2,
+      12,
+      15,
+      23
+     ],
+     -3
+    ],
+    "expected": 1
+   },
+   {
+    "args": [
+     [
+      -26,
+      19
+     ],
+     19
+    ],
+    "expected": 1
+   },
+   {
+    "args": [
+     [
+      -6,
+      4,
+      16,
+      30
+     ],
+     36
+    ],
+    "expected": 4
+   }
+  ],
+  "mentorNotes": {
+   "keyInsight": "You want the first index whose value is ≥ target. Binary search can find that boundary directly.",
+   "bruteForce": "Scan until nums[i] >= target: O(n).",
+   "optimal": "Lower-bound binary search with lo < hi and hi = len(nums): O(log n).",
+   "commonMistakes": [
+    "Returning -1 when absent",
+    "Off-by-one when the target is larger than everything"
+   ],
+   "edgeCases": [
+    "Empty list",
+    "Insert at the front",
+    "Insert at the end"
+   ]
+  }
+ },
+ {
+  "slug": "rotated-array-search",
+  "title": "Rotated List Search",
+  "difficulty": "medium",
+  "topic": "binary-search",
+  "pattern": "Binary search on the sorted half",
+  "statement": "A sorted list of distinct integers was rotated at an unknown point (for example `[0,1,2,4,5,6,7]` became `[4,5,6,7,0,1,2]`). Return the index of `target` in `nums`, or `-1`.\n\nAim for O(log n) time.",
+  "constraints": [
+   "1 ≤ len(nums) ≤ 5000",
+   "All values are distinct"
+  ],
+  "functionName": {
+   "python": "search_rotated",
+   "javascript": "searchRotated"
+  },
+  "params": [
+   "nums",
+   "target"
+  ],
+  "starter": {
+   "python": "def search_rotated(nums, target):\n    pass\n",
+   "javascript": "function searchRotated(nums, target) {\n  \n}\n"
+  },
+  "compare": "exact",
+  "tests": [
+   {
+    "args": [
+     [
+      4,
+      5,
+      6,
+      7,
+      0,
+      1,
+      2
+     ],
+     0
+    ],
+    "expected": 4
+   },
+   {
+    "args": [
+     [
+      4,
+      5,
+      6,
+      7,
+      0,
+      1,
+      2
+     ],
+     3
+    ],
+    "expected": -1
+   },
+   {
+    "args": [
+     [
+      1
+     ],
+     0
+    ],
+    "expected": -1
+   }
+  ],
+  "hiddenTests": [
+   {
+    "args": [
+     [
+      1
+     ],
+     1
+    ],
+    "expected": 0
+   },
+   {
+    "args": [
+     [
+      3,
+      1
+     ],
+     1
+    ],
+    "expected": 1
+   },
+   {
+    "args": [
+     [
+      5,
+      1,
+      3
+     ],
+     5
+    ],
+    "expected": 0
+   },
+   {
+    "args": [
+     [
+      1,
+      3
+     ],
+     3
+    ],
+    "expected": 1
+   },
+   {
+    "args": [
+     [
+      34,
+      38,
+      -1,
+      31
+     ],
+     34
+    ],
+    "expected": 0
+   },
+   {
+    "args": [
+     [
+      -11,
+      3,
+      25,
+      38
+     ],
+     3
+    ],
+    "expected": 1
+   },
+   {
+    "args": [
+     [
+      11,
+      18,
+      22,
+      33,
+      36,
+      39,
+      -11,
+      -7,
+      -3,
+      -2,
+      10
+     ],
+     -7
+    ],
+    "expected": 7
+   },
+   {
+    "args": [
+     [
+      -5,
+      -4,
+      1,
+      2,
+      4,
+      12,
+      13,
+      37,
+      38,
+      -16,
+      -10
+     ],
+     -10
+    ],
+    "expected": 10
+   },
+   {
+    "args": [
+     [
+      18,
+      20,
+      25,
+      -14,
+      -13,
+      -5,
+      2,
+      6
+     ],
+     25
+    ],
+    "expected": 2
+   },
+   {
+    "args": [
+     [
+      18,
+      31,
+      -20,
+      -15,
+      -9,
+      4
+     ],
+     -9
+    ],
+    "expected": 4
+   },
+   {
+    "args": [
+     [
+      24,
+      25,
+      28,
+      38,
+      -16,
+      -15,
+      -10,
+      -5,
+      6,
+      8,
+      13
+     ],
+     28
+    ],
+    "expected": 2
+   },
+   {
+    "args": [
+     [
+      14,
+      36,
+      -8,
+      -3
+     ],
+     14
+    ],
+    "expected": 0
+   }
+  ],
+  "mentorNotes": {
+   "keyInsight": "Whichever middle you pick, at least one half (left or right of mid) is properly sorted. Check whether the target lies inside that sorted half to decide where to go.",
+   "bruteForce": "Linear scan: O(n).",
+   "optimal": "Modified binary search: O(log n).",
+   "commonMistakes": [
+    "Using < instead of <= when testing nums[lo] <= nums[mid]",
+    "Wrong range check for the sorted half"
+   ],
+   "edgeCases": [
+    "Not rotated at all",
+    "Two elements",
+    "Target is the pivot"
+   ]
+  }
+ },
+ {
+  "slug": "min-eating-speed",
+  "title": "Snack Speed",
+  "difficulty": "medium",
+  "topic": "binary-search",
+  "pattern": "Binary search on the answer",
+  "statement": "There are snack piles, `piles[i]` snacks in pile `i`. Each hour you pick one pile and eat up to `k` snacks from it (if it has fewer, you finish it and wait out the hour).\n\nReturn the smallest integer speed `k` that lets you finish every pile within `h` hours.",
+  "constraints": [
+   "1 ≤ len(piles) ≤ h ≤ 10⁹",
+   "1 ≤ piles[i] ≤ 10⁹"
+  ],
+  "functionName": {
+   "python": "min_speed",
+   "javascript": "minSpeed"
+  },
+  "params": [
+   "piles",
+   "h"
+  ],
+  "starter": {
+   "python": "def min_speed(piles, h):\n    pass\n",
+   "javascript": "function minSpeed(piles, h) {\n  \n}\n"
+  },
+  "compare": "exact",
+  "tests": [
+   {
+    "args": [
+     [
+      3,
+      6,
+      7,
+      11
+     ],
+     8
+    ],
+    "expected": 4
+   },
+   {
+    "args": [
+     [
+      30,
+      11,
+      23,
+      4,
+      20
+     ],
+     5
+    ],
+    "expected": 30
+   },
+   {
+    "args": [
+     [
+      30,
+      11,
+      23,
+      4,
+      20
+     ],
+     6
+    ],
+    "expected": 23
+   }
+  ],
+  "hiddenTests": [
+   {
+    "args": [
+     [
+      1
+     ],
+     1
+    ],
+    "expected": 1
+   },
+   {
+    "args": [
+     [
+      1000000000
+     ],
+     2
+    ],
+    "expected": 500000000
+   },
+   {
+    "args": [
+     [
+      5,
+      5,
+      5
+     ],
+     15
+    ],
+    "expected": 1
+   },
+   {
+    "args": [
+     [
+      39,
+      47,
+      35,
+      34,
+      28,
+      11,
+      42
+     ],
+     7
+    ],
+    "expected": 47
+   },
+   {
+    "args": [
+     [
+      43
+     ],
+     1
+    ],
+    "expected": 43
+   },
+   {
+    "args": [
+     [
+      5,
+      25,
+      46
+     ],
+     8
+    ],
+    "expected": 12
+   },
+   {
+    "args": [
+     [
+      19,
+      16,
+      15,
+      5,
+      21
+     ],
+     7
+    ],
+    "expected": 16
+   },
+   {
+    "args": [
+     [
+      26,
+      46,
+      42,
+      29
+     ],
+     10
+    ],
+    "expected": 16
+   },
+   {
+    "args": [
+     [
+      28,
+      34,
+      11,
+      1,
+      42
+     ],
+     15
+    ],
+    "expected": 10
+   },
+   {
+    "args": [
+     [
+      8,
+      16,
+      36,
+      10,
+      38,
+      34
+     ],
+     11
+    ],
+    "expected": 17
+   },
+   {
+    "args": [
+     [
+      34,
+      19,
+      50,
+      28
+     ],
+     5
+    ],
+    "expected": 34
+   },
+   {
+    "args": [
+     [
+      25,
+      27
+     ],
+     11
+    ],
+    "expected": 5
+   }
+  ],
+  "mentorNotes": {
+   "keyInsight": "If speed k works, every faster speed works too. That monotonic yes/no lets you binary search over k instead of over the list.",
+   "bruteForce": "Try k = 1, 2, 3 … up to max(piles): O(max · n).",
+   "optimal": "Binary search k in [1, max(piles)], checking sum(ceil(p / k)) ≤ h: O(n log max).",
+   "commonMistakes": [
+    "Using p // k instead of ceil(p / k)",
+    "Starting the search at 0",
+    "Returning lo/hi inconsistently"
+   ],
+   "edgeCases": [
+    "One pile",
+    "h equals number of piles",
+    "Very large piles"
+   ]
+  }
+ }
+]

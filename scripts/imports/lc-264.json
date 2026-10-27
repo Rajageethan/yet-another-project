@@ -1,0 +1,146 @@
+{
+ "id": "lc-264",
+ "status": "pending",
+ "source": {
+  "dataset": "newfacade/LeetCodeDataset",
+  "license": "Apache-2.0",
+  "questionId": 264,
+  "taskId": "ugly-number-ii",
+  "tags": [
+   "Hash Table",
+   "Math",
+   "Dynamic Programming",
+   "Heap (Priority Queue)"
+  ]
+ },
+ "difficulty": "medium",
+ "topic": "heaps",
+ "functionName": {
+  "python": "nth_ugly_number",
+  "javascript": "nthUglyNumber"
+ },
+ "params": [
+  "n"
+ ],
+ "compare": "exact",
+ "tests": [
+  {
+   "args": [
+    9
+   ],
+   "expected": 10
+  },
+  {
+   "args": [
+    50
+   ],
+   "expected": 243
+  },
+  {
+   "args": [
+    400
+   ],
+   "expected": 311040
+  }
+ ],
+ "hiddenTests": [
+  {
+   "args": [
+    1
+   ],
+   "expected": 1
+  },
+  {
+   "args": [
+    3
+   ],
+   "expected": 3
+  },
+  {
+   "args": [
+    2
+   ],
+   "expected": 2
+  },
+  {
+   "args": [
+    7
+   ],
+   "expected": 8
+  },
+  {
+   "args": [
+    10
+   ],
+   "expected": 12
+  },
+  {
+   "args": [
+    200
+   ],
+   "expected": 16200
+  },
+  {
+   "args": [
+    550
+   ],
+   "expected": 1555200
+  },
+  {
+   "args": [
+    750
+   ],
+   "expected": 8748000
+  },
+  {
+   "args": [
+    800
+   ],
+   "expected": 12754584
+  },
+  {
+   "args": [
+    1400
+   ],
+   "expected": 516560652
+  },
+  {
+   "args": [
+    1300
+   ],
+   "expected": 306110016
+  },
+  {
+   "args": [
+    1690
+   ],
+   "expected": 2123366400
+  },
+  {
+   "args": [
+    1685
+   ],
+   "expected": 2066242608
+  },
+  {
+   "args": [
+    1675
+   ],
+   "expected": 1990656000
+  },
+  {
+   "args": [
+    1680
+   ],
+   "expected": 2025000000
+  }
+ ],
+ "verification": {
+  "datasetCases": 38,
+  "parsedCases": 38,
+  "agreedCases": 38,
+  "secondSolution": true
+ },
+ "referenceSolution": "class Solution:\n    def nthUglyNumber(self, n: int) -> int:\n        h = [1]\n        vis = {1}\n        ans = 1\n        for _ in range(n):\n            ans = heappop(h)\n            for v in [2, 3, 5]:\n                nxt = ans * v\n                if nxt not in vis:\n                    vis.add(nxt)\n                    heappush(h, nxt)\n        return ans\n",
+ "draft": null
+}

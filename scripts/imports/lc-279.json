@@ -1,0 +1,145 @@
+{
+ "id": "lc-279",
+ "status": "pending",
+ "source": {
+  "dataset": "newfacade/LeetCodeDataset",
+  "license": "Apache-2.0",
+  "questionId": 279,
+  "taskId": "perfect-squares",
+  "tags": [
+   "Breadth-First Search",
+   "Math",
+   "Dynamic Programming"
+  ]
+ },
+ "difficulty": "medium",
+ "topic": "graphs",
+ "functionName": {
+  "python": "num_squares",
+  "javascript": "numSquares"
+ },
+ "params": [
+  "n"
+ ],
+ "compare": "exact",
+ "tests": [
+  {
+   "args": [
+    50
+   ],
+   "expected": 2
+  },
+  {
+   "args": [
+    77
+   ],
+   "expected": 3
+  },
+  {
+   "args": [
+    100
+   ],
+   "expected": 1
+  }
+ ],
+ "hiddenTests": [
+  {
+   "args": [
+    8
+   ],
+   "expected": 2
+  },
+  {
+   "args": [
+    1
+   ],
+   "expected": 1
+  },
+  {
+   "args": [
+    17
+   ],
+   "expected": 2
+  },
+  {
+   "args": [
+    63
+   ],
+   "expected": 4
+  },
+  {
+   "args": [
+    75
+   ],
+   "expected": 3
+  },
+  {
+   "args": [
+    31
+   ],
+   "expected": 4
+  },
+  {
+   "args": [
+    156
+   ],
+   "expected": 4
+  },
+  {
+   "args": [
+    400
+   ],
+   "expected": 1
+  },
+  {
+   "args": [
+    2356
+   ],
+   "expected": 3
+  },
+  {
+   "args": [
+    1111
+   ],
+   "expected": 4
+  },
+  {
+   "args": [
+    8402
+   ],
+   "expected": 2
+  },
+  {
+   "args": [
+    7776
+   ],
+   "expected": 3
+  },
+  {
+   "args": [
+    1999
+   ],
+   "expected": 4
+  },
+  {
+   "args": [
+    6400
+   ],
+   "expected": 1
+  },
+  {
+   "args": [
+    12345
+   ],
+   "expected": 3
+  }
+ ],
+ "verification": {
+  "datasetCases": 75,
+  "parsedCases": 75,
+  "agreedCases": 75,
+  "secondSolution": true
+ },
+ "referenceSolution": "class Solution:\n    def numSquares(self, n: int) -> int:\n        m = int(sqrt(n))\n        f = [[inf] * (n + 1) for _ in range(m + 1)]\n        f[0][0] = 0\n        for i in range(1, m + 1):\n            for j in range(n + 1):\n                f[i][j] = f[i - 1][j]\n                if j >= i * i:\n                    f[i][j] = min(f[i][j], f[i][j - i * i] + 1)\n        return f[m][n]\n",
+ "draft": null
+}

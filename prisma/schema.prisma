@@ -1,0 +1,157 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id              String   @id @default(cuid())
+  email           String   @unique
+  name            String?
+  image           String?
+  onboarded       Boolean  @default(false)
+  year            String?
+  goal            String?
+  language        String   @default("python")
+  /// 1 = easy, 2 = medium, 3 = hard
+  level           Int      @default(1)
+  timezone        String   @default("Asia/Kolkata")
+  groqKeyEnc      String?
+  mentorInterrupt Boolean  @default(true)
+  guidanceStyle   String   @default("balanced")
+  currentStreak   Int      @default(0)
+  longestStreak   Int      @default(0)
+  freezes         Int      @default(0)
+  /// YYYY-MM-DD in the user's timezone
+  lastSolvedDate  String?
+  createdAt       DateTime @default(now())
+
+  mastery     TopicMastery[]
+  assignments DailyAssignment[]
+  sessions    Session[]
+  reviews     ReviewSchedule[]
+  usage       UsageDay[]
+}
+
+model TopicMastery {
+  userId     String
+  topic      String
+  /// 0–100
+  score      Float
+  selfRating Int?
+  attempts   Int      @default(0)
+  updatedAt  DateTime @updatedAt
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, topic])
+}
+
+model DailyAssignment {
+  id          String  @id @default(cuid())
+  userId      String
+  date        String
+  problemSlug String
+  /// "new" | "review"
+  kind        String  @default("new")
+  user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, date])
+}
+
+model Session {
+  id              String    @id @default(cuid())
+  userId          String
+  problemSlug     String
+  date            String
+  language        String
+  /// see src/lib/mentor/stages.ts
+  stage           String    @default("understand")
+  /// "active" | "solved"
+  status          String    @default("active")
+  code            String    @default("")
+  hintsUsed       Int       @default(0)
+  runs            Int       @default(0)
+  pasteFlags      Int       @default(0)
+  /// Running summary of messages that fell out of the context window
+  summary         String    @default("")
+  summarizedCount Int       @default(0)
+  /// Code as the mentor last saw it, for diffs
+  lastMentorCode  String    @default("")
+  lastInterruptAt DateTime?
+  startedAt       DateTime  @default(now())
+  solvedAt        DateTime?
+
+  user       User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages   Message[]
+  snapshots  CodeSnapshot[]
+  assessment Assessment?
+
+  @@index([userId, date])
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  sessionId String
+  /// "user" | "assistant" | "event"
+  role      String
+  content   String
+  /// JSON: tool effects, event payloads
+  meta      String?
+  createdAt DateTime @default(now())
+  session   Session  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId, createdAt])
+}
+
+model CodeSnapshot {
+  id        String   @id @default(cuid())
+  sessionId String
+  code      String
+  language  String
+  pasted    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  session   Session  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId, createdAt])
+}
+
+model Assessment {
+  sessionId     String   @id
+  understanding Int
+  edgeCases     Int
+  approach      Int
+  complexity    Int
+  correctness   Int
+  communication Int
+  thinkingScore Int
+  wentWell      String
+  workOn        String
+  keyInsight    String?
+  patternName   String?
+  patternCard   String?
+  complexityStr String?
+  createdAt     DateTime @default(now())
+  session       Session  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+}
+
+model ReviewSchedule {
+  userId       String
+  problemSlug  String
+  dueDate      String
+  intervalDays Int
+  user         User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, problemSlug])
+}
+
+model UsageDay {
+  userId String
+  date   String
+  turns  Int    @default(0)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, date])
+}

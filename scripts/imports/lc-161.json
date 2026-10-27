@@ -1,0 +1,163 @@
+{
+ "id": "lc-161",
+ "status": "pending",
+ "source": {
+  "dataset": "newfacade/LeetCodeDataset",
+  "license": "Apache-2.0",
+  "questionId": 161,
+  "taskId": "one-edit-distance",
+  "tags": [
+   "Two Pointers",
+   "String"
+  ]
+ },
+ "difficulty": "medium",
+ "topic": "two-pointers",
+ "functionName": {
+  "python": "is_one_edit_distance",
+  "javascript": "isOneEditDistance"
+ },
+ "params": [
+  "s",
+  "t"
+ ],
+ "compare": "exact",
+ "tests": [
+  {
+   "args": [
+    "abc",
+    "abcde"
+   ],
+   "expected": false
+  },
+  {
+   "args": [
+    "aabbcc",
+    "aabbc"
+   ],
+   "expected": true
+  },
+  {
+   "args": [
+    "abcdefg",
+    "abcdef"
+   ],
+   "expected": true
+  }
+ ],
+ "hiddenTests": [
+  {
+   "args": [
+    "",
+    ""
+   ],
+   "expected": false
+  },
+  {
+   "args": [
+    "123",
+    "1234"
+   ],
+   "expected": true
+  },
+  {
+   "args": [
+    "abcd",
+    "abcf"
+   ],
+   "expected": true
+  },
+  {
+   "args": [
+    "abcd",
+    "abec"
+   ],
+   "expected": false
+  },
+  {
+   "args": [
+    "gumbo",
+    "sumo"
+   ],
+   "expected": false
+  },
+  {
+   "args": [
+    "aabbcc",
+    "aabbca"
+   ],
+   "expected": true
+  },
+  {
+   "args": [
+    "abacax",
+    "abacaxx"
+   ],
+   "expected": true
+  },
+  {
+   "args": [
+    "abcdefghijk",
+    "abc"
+   ],
+   "expected": false
+  },
+  {
+   "args": [
+    "algorithm",
+    "algoritm"
+   ],
+   "expected": true
+  },
+  {
+   "args": [
+    "abcdefghijk",
+    "abcdefg"
+   ],
+   "expected": false
+  },
+  {
+   "args": [
+    "abcdefghijk",
+    "abcdefgh"
+   ],
+   "expected": false
+  },
+  {
+   "args": [
+    "1234567890",
+    "12345678901"
+   ],
+   "expected": true
+  },
+  {
+   "args": [
+    "interspecies",
+    "interpres"
+   ],
+   "expected": false
+  },
+  {
+   "args": [
+    "abcdefghijk",
+    "bacdefghijk"
+   ],
+   "expected": false
+  },
+  {
+   "args": [
+    "abcdefghijk",
+    "abcdefghijkabcdefghijkabcdefghijkabcdefghijkabcdefghijkabcdefghijkabcdefghijkabcdefghijk"
+   ],
+   "expected": false
+  }
+ ],
+ "verification": {
+  "datasetCases": 175,
+  "parsedCases": 175,
+  "agreedCases": 175,
+  "secondSolution": true
+ },
+ "referenceSolution": "class Solution:\n    def isOneEditDistance(self, s: str, t: str) -> bool:\n        if len(s) < len(t):\n            return self.isOneEditDistance(t, s)\n        m, n = len(s), len(t)\n        if m - n > 1:\n            return False\n        for i, c in enumerate(t):\n            if c != s[i]:\n                return s[i + 1 :] == t[i + 1 :] if m == n else s[i + 1 :] == t[i:]\n        return m == n + 1\n",
+ "draft": null
+}

@@ -1,0 +1,269 @@
+{
+ "id": "lc-187",
+ "status": "pending",
+ "source": {
+  "dataset": "newfacade/LeetCodeDataset",
+  "license": "Apache-2.0",
+  "questionId": 187,
+  "taskId": "repeated-dna-sequences",
+  "tags": [
+   "Bit Manipulation",
+   "Hash Table",
+   "String",
+   "Sliding Window",
+   "Hash Function",
+   "Rolling Hash"
+  ]
+ },
+ "difficulty": "medium",
+ "topic": "sliding-window",
+ "functionName": {
+  "python": "find_repeated_dna_sequences",
+  "javascript": "findRepeatedDnaSequences"
+ },
+ "params": [
+  "s"
+ ],
+ "compare": "unordered_deep",
+ "tests": [
+  {
+   "args": [
+    "ATATATATATATATATATATATATATATATATAT"
+   ],
+   "expected": [
+    "ATATATATAT",
+    "TATATATATA"
+   ]
+  },
+  {
+   "args": [
+    "ACGACGACGACGACGACGACGACGACGACGACGACGACGACG"
+   ],
+   "expected": [
+    "ACGACGACGA",
+    "CGACGACGAC",
+    "GACGACGACG"
+   ]
+  },
+  {
+   "args": [
+    "ATATATATATACGTACGTACGTACGTACGTACGT"
+   ],
+   "expected": [
+    "TACGTACGTA",
+    "ACGTACGTAC",
+    "CGTACGTACG",
+    "GTACGTACGT"
+   ]
+  }
+ ],
+ "hiddenTests": [
+  {
+   "args": [
+    "TTTTTTTTTTAAAAAAAAAA"
+   ],
+   "expected": []
+  },
+  {
+   "args": [
+    "TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT"
+   ],
+   "expected": [
+    "TTTTTTTTTT"
+   ]
+  },
+  {
+   "args": [
+    "ACGTCGTCGTCGTCGT"
+   ],
+   "expected": [
+    "CGTCGTCGTC",
+    "GTCGTCGTCG",
+    "TCGTCGTCGT"
+   ]
+  },
+  {
+   "args": [
+    "GCGCGCGCGCGCGCGCGCGCGCGCGCGCGCGC"
+   ],
+   "expected": [
+    "GCGCGCGCGC",
+    "CGCGCGCGCG"
+   ]
+  },
+  {
+   "args": [
+    "ACGACGACGACGACGACGACGACGACGACG"
+   ],
+   "expected": [
+    "ACGACGACGA",
+    "CGACGACGAC",
+    "GACGACGACG"
+   ]
+  },
+  {
+   "args": [
+    "TTACGTACGTACGTACGTACGTACGTACGTAC"
+   ],
+   "expected": [
+    "TACGTACGTA",
+    "ACGTACGTAC",
+    "CGTACGTACG",
+    "GTACGTACGT"
+   ]
+  },
+  {
+   "args": [
+    "ACGTACGTACGTACGTATATATATACGTACGTAC"
+   ],
+   "expected": [
+    "ACGTACGTAC",
+    "CGTACGTACG",
+    "GTACGTACGT",
+    "TACGTACGTA"
+   ]
+  },
+  {
+   "args": [
+    "GTACGTACGTACGTACGTACGTACGTACGTACGTACG"
+   ],
+   "expected": [
+    "GTACGTACGT",
+    "TACGTACGTA",
+    "ACGTACGTAC",
+    "CGTACGTACG"
+   ]
+  },
+  {
+   "args": [
+    "GCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTA"
+   ],
+   "expected": [
+    "GCTAGCTAGC",
+    "CTAGCTAGCT",
+    "TAGCTAGCTA",
+    "AGCTAGCTAG"
+   ]
+  },
+  {
+   "args": [
+    "AGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCT"
+   ],
+   "expected": [
+    "AGCTAGCTAG",
+    "GCTAGCTAGC",
+    "CTAGCTAGCT",
+    "TAGCTAGCTA"
+   ]
+  },
+  {
+   "args": [
+    "CCCGGGCCCGGGCCCGGGCCCGGGCCCGGGCCCGGGCCCGGG"
+   ],
+   "expected": [
+    "CCCGGGCCCG",
+    "CCGGGCCCGG",
+    "CGGGCCCGGG",
+    "GGGCCCGGGC",
+    "GGCCCGGGCC",
+    "GCCCGGGCCC"
+   ]
+  },
+  {
+   "args": [
+    "GATTACAAGATTACAAGATTACAAGATTACAAGATTAC"
+   ],
+   "expected": [
+    "GATTACAAGA",
+    "ATTACAAGAT",
+    "TTACAAGATT",
+    "TACAAGATTA",
+    "ACAAGATTAC",
+    "CAAGATTACA",
+    "AAGATTACAA",
+    "AGATTACAAG"
+   ]
+  },
+  {
+   "args": [
+    "ACGACGTTTTACGACGTTTTACGACGTTTT"
+   ],
+   "expected": [
+    "ACGACGTTTT",
+    "CGACGTTTTA",
+    "GACGTTTTAC",
+    "ACGTTTTACG",
+    "CGTTTTACGA",
+    "GTTTTACGAC",
+    "TTTTACGACG",
+    "TTTACGACGT",
+    "TTACGACGTT",
+    "TACGACGTTT"
+   ]
+  },
+  {
+   "args": [
+    "AAAAAAAAAAACAAAAAAAAAAACAAAAAAAAAAAC"
+   ],
+   "expected": [
+    "AAAAAAAAAA",
+    "AAAAAAAAAC",
+    "AAAAAAAACA",
+    "AAAAAAACAA",
+    "AAAAAACAAA",
+    "AAAAACAAAA",
+    "AAAACAAAAA",
+    "AAACAAAAAA",
+    "AACAAAAAAA",
+    "ACAAAAAAAA",
+    "CAAAAAAAAA"
+   ]
+  },
+  {
+   "args": [
+    "AAAAAAAAAAAACCCCCCCCCCGGGGGGGGGGTTTTTTTTTTAAAAAAAAAAAACCCCCCCCCCGGGGGGGGGGTTTTTTTTTT"
+   ],
+   "expected": [
+    "AAAAAAAAAA",
+    "AAAAAAAAAC",
+    "AAAAAAAACC",
+    "AAAAAAACCC",
+    "AAAAAACCCC",
+    "AAAAACCCCC",
+    "AAAACCCCCC",
+    "AAACCCCCCC",
+    "AACCCCCCCC",
+    "ACCCCCCCCC",
+    "CCCCCCCCCC",
+    "CCCCCCCCCG",
+    "CCCCCCCCGG",
+    "CCCCCCCGGG",
+    "CCCCCCGGGG",
+    "CCCCCGGGGG",
+    "CCCCGGGGGG",
+    "CCCGGGGGGG",
+    "CCGGGGGGGG",
+    "CGGGGGGGGG",
+    "GGGGGGGGGG",
+    "GGGGGGGGGT",
+    "GGGGGGGGTT",
+    "GGGGGGGTTT",
+    "GGGGGGTTTT",
+    "GGGGGTTTTT",
+    "GGGGTTTTTT",
+    "GGGTTTTTTT",
+    "GGTTTTTTTT",
+    "GTTTTTTTTT",
+    "TTTTTTTTTT"
+   ]
+  }
+ ],
+ "verification": {
+  "datasetCases": 137,
+  "parsedCases": 137,
+  "agreedCases": 137,
+  "secondSolution": true
+ },
+ "referenceSolution": "class Solution:\n    def findRepeatedDnaSequences(self, s: str) -> List[str]:\n        cnt = Counter()\n        ans = []\n        for i in range(len(s) - 10 + 1):\n            t = s[i : i + 10]\n            cnt[t] += 1\n            if cnt[t] == 2:\n                ans.append(t)\n        return ans\n",
+ "draft": null
+}

@@ -1,0 +1,620 @@
+{
+ "id": "lc-621",
+ "status": "pending",
+ "source": {
+  "dataset": "newfacade/LeetCodeDataset",
+  "license": "Apache-2.0",
+  "questionId": 621,
+  "taskId": "task-scheduler",
+  "tags": [
+   "Greedy",
+   "Array",
+   "Hash Table",
+   "Counting",
+   "Sorting",
+   "Heap (Priority Queue)"
+  ]
+ },
+ "difficulty": "medium",
+ "topic": "heaps",
+ "functionName": {
+  "python": "least_interval",
+  "javascript": "leastInterval"
+ },
+ "params": [
+  "tasks",
+  "n"
+ ],
+ "compare": "unordered_deep",
+ "tests": [
+  {
+   "args": [
+    [
+     "A",
+     "A",
+     "A",
+     "A",
+     "A",
+     "B",
+     "B",
+     "B",
+     "B",
+     "B",
+     "C",
+     "C",
+     "C",
+     "C",
+     "C"
+    ],
+    5
+   ],
+   "expected": 27
+  },
+  {
+   "args": [
+    [
+     "X",
+     "X",
+     "X",
+     "X",
+     "Y",
+     "Y",
+     "Y",
+     "Y",
+     "Z",
+     "Z",
+     "Z",
+     "Z",
+     "Z",
+     "W",
+     "W",
+     "W",
+     "W",
+     "W",
+     "W"
+    ],
+    6
+   ],
+   "expected": 36
+  },
+  {
+   "args": [
+    [
+     "A",
+     "A",
+     "A",
+     "A",
+     "A",
+     "B",
+     "B",
+     "B",
+     "B",
+     "B",
+     "C",
+     "C",
+     "C",
+     "C",
+     "C",
+     "D",
+     "D",
+     "D",
+     "D",
+     "D"
+    ],
+    5
+   ],
+   "expected": 28
+  }
+ ],
+ "hiddenTests": [
+  {
+   "args": [
+    [
+     "A"
+    ],
+    5
+   ],
+   "expected": 1
+  },
+  {
+   "args": [
+    [
+     "A",
+     "B",
+     "C",
+     "D",
+     "E",
+     "F"
+    ],
+    0
+   ],
+   "expected": 6
+  },
+  {
+   "args": [
+    [
+     "A",
+     "A",
+     "A",
+     "A",
+     "A",
+     "A",
+     "B",
+     "C",
+     "D"
+    ],
+    2
+   ],
+   "expected": 16
+  },
+  {
+   "args": [
+    [
+     "A",
+     "A",
+     "A",
+     "A",
+     "A",
+     "A",
+     "B",
+     "C",
+     "D",
+     "E",
+     "F",
+     "G"
+    ],
+    2
+   ],
+   "expected": 16
+  },
+  {
+   "args": [
+    [
+     "X",
+     "X",
+     "X",
+     "Y",
+     "Y",
+     "Y",
+     "Z",
+     "Z",
+     "W",
+     "W",
+     "W",
+     "W",
+     "W",
+     "V",
+     "V",
+     "V",
+     "V",
+     "V"
+    ],
+    5
+   ],
+   "expected": 26
+  },
+  {
+   "args": [
+    [
+     "A",
+     "A",
+     "A",
+     "A",
+     "A",
+     "B",
+     "B",
+     "B",
+     "B",
+     "B",
+     "C",
+     "C",
+     "C",
+     "C",
+     "C",
+     "D",
+     "D",
+     "D",
+     "D",
+     "D"
+    ],
+    2
+   ],
+   "expected": 20
+  },
+  {
+   "args": [
+    [
+     "A",
+     "A",
+     "A",
+     "A",
+     "A",
+     "A",
+     "A",
+     "B",
+     "B",
+     "B",
+     "B",
+     "B",
+     "B",
+     "B",
+     "C",
+     "C",
+     "C",
+     "C",
+     "C",
+     "C",
+     "C"
+    ],
+    6
+   ],
+   "expected": 45
+  },
+  {
+   "args": [
+    [
+     "A",
+     "A",
+     "A",
+     "A",
+     "A",
+     "A",
+     "A",
+     "A",
+     "A",
+     "A",
+     "A",
+     "A",
+     "B",
+     "B",
+     "B",
+     "B",
+     "B",
+     "B",
+     "B",
+     "B",
+     "B",
+     "B",
+     "B",
+     "B"
+    ],
+    2
+   ],
+   "expected": 35
+  },
+  {
+   "args": [
+    [
+     "A",
+     "A",
+     "A",
+     "B",
+     "B",
+     "B",
+     "C",
+     "C",
+     "C",
+     "D",
+     "D",
+     "D",
+     "E",
+     "E",
+     "E",
+     "F",
+     "F",
+     "F",
+     "G",
+     "G",
+     "G",
+     "H",
+     "H",
+     "H"
+    ],
+    2
+   ],
+   "expected": 24
+  },
+  {
+   "args": [
+    [
+     "A",
+     "B",
+     "C",
+     "D",
+     "E",
+     "F",
+     "G",
+     "H",
+     "I",
+     "J",
+     "K",
+     "L",
+     "M",
+     "N",
+     "O",
+     "P",
+     "Q",
+     "R",
+     "S",
+     "T",
+     "U",
+     "V",
+     "W",
+     "X",
+     "Y",
+     "Z"
+    ],
+    0
+   ],
+   "expected": 26
+  },
+  {
+   "args": [
+    [
+     "X",
+     "Y",
+     "Z",
+     "X",
+     "Y",
+     "Z",
+     "X",
+     "Y",
+     "Z",
+     "X",
+     "Y",
+     "Z",
+     "X",
+     "Y",
+     "Z",
+     "X",
+     "Y",
+     "Z",
+     "X",
+     "Y",
+     "Z",
+     "X",
+     "Y",
+     "Z",
+     "X",
+     "Y",
+     "Z"
+    ],
+    3
+   ],
+   "expected": 35
+  },
+  {
+   "args": [
+    [
+     "A",
+     "A",
+     "A",
+     "B",
+     "B",
+     "B",
+     "C",
+     "C",
+     "C",
+     "D",
+     "D",
+     "D",
+     "E",
+     "E",
+     "E",
+     "F",
+     "F",
+     "F",
+     "G",
+     "G",
+     "G",
+     "H",
+     "H",
+     "H",
+     "I",
+     "I",
+     "I",
+     "J",
+     "J",
+     "J"
+    ],
+    7
+   ],
+   "expected": 30
+  },
+  {
+   "args": [
+    [
+     "A",
+     "A",
+     "A",
+     "B",
+     "B",
+     "B",
+     "C",
+     "C",
+     "C",
+     "D",
+     "D",
+     "D",
+     "E",
+     "E",
+     "E",
+     "F",
+     "F",
+     "F",
+     "G",
+     "G",
+     "G",
+     "H",
+     "H",
+     "H",
+     "I",
+     "I",
+     "I",
+     "J",
+     "J",
+     "J",
+     "K",
+     "K",
+     "K"
+    ],
+    4
+   ],
+   "expected": 33
+  },
+  {
+   "args": [
+    [
+     "A",
+     "A",
+     "B",
+     "B",
+     "C",
+     "C",
+     "D",
+     "D",
+     "E",
+     "E",
+     "F",
+     "F",
+     "G",
+     "G",
+     "H",
+     "H",
+     "I",
+     "I",
+     "J",
+     "J",
+     "K",
+     "K",
+     "L",
+     "L",
+     "M",
+     "M",
+     "N",
+     "N",
+     "O",
+     "O",
+     "P",
+     "P",
+     "Q",
+     "Q",
+     "R",
+     "R",
+     "S",
+     "S",
+     "T",
+     "T",
+     "U",
+     "U",
+     "V",
+     "V",
+     "W",
+     "W",
+     "X",
+     "X",
+     "Y",
+     "Y",
+     "Z",
+     "Z"
+    ],
+    1
+   ],
+   "expected": 52
+  },
+  {
+   "args": [
+    [
+     "A",
+     "A",
+     "A",
+     "B",
+     "B",
+     "B",
+     "C",
+     "C",
+     "C",
+     "D",
+     "D",
+     "D",
+     "E",
+     "E",
+     "E",
+     "F",
+     "F",
+     "F",
+     "G",
+     "G",
+     "G",
+     "H",
+     "H",
+     "H",
+     "I",
+     "I",
+     "I",
+     "J",
+     "J",
+     "J",
+     "K",
+     "K",
+     "K",
+     "L",
+     "L",
+     "L",
+     "M",
+     "M",
+     "M",
+     "N",
+     "N",
+     "N",
+     "O",
+     "O",
+     "O",
+     "P",
+     "P",
+     "P",
+     "Q",
+     "Q",
+     "Q",
+     "R",
+     "R",
+     "R",
+     "S",
+     "S",
+     "S",
+     "T",
+     "T",
+     "T",
+     "U",
+     "U",
+     "U",
+     "V",
+     "V",
+     "V",
+     "W",
+     "W",
+     "W",
+     "X",
+     "X",
+     "X",
+     "Y",
+     "Y",
+     "Y",
+     "Z",
+     "Z",
+     "Z"
+    ],
+    10
+   ],
+   "expected": 78
+  }
+ ],
+ "verification": {
+  "datasetCases": 86,
+  "parsedCases": 86,
+  "agreedCases": 86,
+  "secondSolution": true
+ },
+ "referenceSolution": "class Solution:\n    def leastInterval(self, tasks: List[str], n: int) -> int:\n        cnt = Counter(tasks)\n        x = max(cnt.values())\n        s = sum(v == x for v in cnt.values())\n        return max(len(tasks), (x - 1) * (n + 1) + s)\n",
+ "draft": null
+}

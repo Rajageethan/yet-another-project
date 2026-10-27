@@ -1,0 +1,163 @@
+{
+ "id": "lc-165",
+ "status": "pending",
+ "source": {
+  "dataset": "newfacade/LeetCodeDataset",
+  "license": "Apache-2.0",
+  "questionId": 165,
+  "taskId": "compare-version-numbers",
+  "tags": [
+   "Two Pointers",
+   "String"
+  ]
+ },
+ "difficulty": "medium",
+ "topic": "two-pointers",
+ "functionName": {
+  "python": "compare_version",
+  "javascript": "compareVersion"
+ },
+ "params": [
+  "version1",
+  "version2"
+ ],
+ "compare": "exact",
+ "tests": [
+  {
+   "args": [
+    "0.0.1",
+    "0.0.2"
+   ],
+   "expected": -1
+  },
+  {
+   "args": [
+    "1.0.0",
+    "1.0.0.0"
+   ],
+   "expected": 0
+  },
+  {
+   "args": [
+    "1.000001",
+    "1.00001"
+   ],
+   "expected": 0
+  }
+ ],
+ "hiddenTests": [
+  {
+   "args": [
+    "1",
+    "1.0"
+   ],
+   "expected": 0
+  },
+  {
+   "args": [
+    "1.2",
+    "1.02"
+   ],
+   "expected": 0
+  },
+  {
+   "args": [
+    "5.12",
+    "5.10.0"
+   ],
+   "expected": 1
+  },
+  {
+   "args": [
+    "1.0.0.0.0",
+    "1"
+   ],
+   "expected": 0
+  },
+  {
+   "args": [
+    "5.5.5.5",
+    "5.5.5"
+   ],
+   "expected": 1
+  },
+  {
+   "args": [
+    "5.5.5",
+    "5.05.005"
+   ],
+   "expected": 0
+  },
+  {
+   "args": [
+    "1.010.001",
+    "1.10.1"
+   ],
+   "expected": 0
+  },
+  {
+   "args": [
+    "1.100.100",
+    "1.99.99"
+   ],
+   "expected": 1
+  },
+  {
+   "args": [
+    "2.3.4.5.6",
+    "2.3.4.5.0"
+   ],
+   "expected": 1
+  },
+  {
+   "args": [
+    "0.0.0.0.0.0.0.0.0.0",
+    "0"
+   ],
+   "expected": 0
+  },
+  {
+   "args": [
+    "1000.1000.1000",
+    "1000.1000"
+   ],
+   "expected": 1
+  },
+  {
+   "args": [
+    "1.10.100.1000",
+    "1.10.100.1000.0"
+   ],
+   "expected": 0
+  },
+  {
+   "args": [
+    "1.2.3.4.5.6.7.8.9.0",
+    "1.2.3.4.5.6.7.8.9"
+   ],
+   "expected": 0
+  },
+  {
+   "args": [
+    "1.2.3.4.5.6.7.8.9",
+    "1.2.3.4.5.6.7.8.9.0.0.0"
+   ],
+   "expected": 0
+  },
+  {
+   "args": [
+    "1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.1",
+    "1"
+   ],
+   "expected": 1
+  }
+ ],
+ "verification": {
+  "datasetCases": 119,
+  "parsedCases": 119,
+  "agreedCases": 119,
+  "secondSolution": true
+ },
+ "referenceSolution": "class Solution:\n    def compareVersion(self, version1: str, version2: str) -> int:\n        m, n = len(version1), len(version2)\n        i = j = 0\n        while i < m or j < n:\n            a = b = 0\n            while i < m and version1[i] != '.':\n                a = a * 10 + int(version1[i])\n                i += 1\n            while j < n and version2[j] != '.':\n                b = b * 10 + int(version2[j])\n                j += 1\n            if a != b:\n                return -1 if a < b else 1\n            i, j = i + 1, j + 1\n        return 0\n",
+ "draft": null
+}

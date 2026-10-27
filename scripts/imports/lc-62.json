@@ -1,0 +1,164 @@
+{
+ "id": "lc-62",
+ "status": "pending",
+ "source": {
+  "dataset": "newfacade/LeetCodeDataset",
+  "license": "Apache-2.0",
+  "questionId": 62,
+  "taskId": "unique-paths",
+  "tags": [
+   "Math",
+   "Dynamic Programming",
+   "Combinatorics"
+  ]
+ },
+ "difficulty": "medium",
+ "topic": "dp",
+ "functionName": {
+  "python": "unique_paths",
+  "javascript": "uniquePaths"
+ },
+ "params": [
+  "m",
+  "n"
+ ],
+ "compare": "exact",
+ "tests": [
+  {
+   "args": [
+    99,
+    1
+   ],
+   "expected": 1
+  },
+  {
+   "args": [
+    1,
+    100
+   ],
+   "expected": 1
+  },
+  {
+   "args": [
+    99,
+    2
+   ],
+   "expected": 99
+  }
+ ],
+ "hiddenTests": [
+  {
+   "args": [
+    1,
+    1
+   ],
+   "expected": 1
+  },
+  {
+   "args": [
+    3,
+    2
+   ],
+   "expected": 3
+  },
+  {
+   "args": [
+    5,
+    5
+   ],
+   "expected": 70
+  },
+  {
+   "args": [
+    1,
+    50
+   ],
+   "expected": 1
+  },
+  {
+   "args": [
+    50,
+    1
+   ],
+   "expected": 1
+  },
+  {
+   "args": [
+    5,
+    8
+   ],
+   "expected": 330
+  },
+  {
+   "args": [
+    50,
+    2
+   ],
+   "expected": 50
+  },
+  {
+   "args": [
+    15,
+    5
+   ],
+   "expected": 3060
+  },
+  {
+   "args": [
+    10,
+    10
+   ],
+   "expected": 48620
+  },
+  {
+   "args": [
+    100,
+    5
+   ],
+   "expected": 4421275
+  },
+  {
+   "args": [
+    15,
+    15
+   ],
+   "expected": 40116600
+  },
+  {
+   "args": [
+    40,
+    10
+   ],
+   "expected": 1677106640
+  },
+  {
+   "args": [
+    90,
+    10
+   ],
+   "expected": 1573664496040
+  },
+  {
+   "args": [
+    20,
+    30
+   ],
+   "expected": 11541847896480
+  },
+  {
+   "args": [
+    30,
+    25
+   ],
+   "expected": 779255311989700
+  }
+ ],
+ "verification": {
+  "datasetCases": 55,
+  "parsedCases": 31,
+  "agreedCases": 31,
+  "secondSolution": true
+ },
+ "referenceSolution": "class Solution:\n    def uniquePaths(self, m: int, n: int) -> int:\n        f = [[0] * n for _ in range(m)]\n        f[0][0] = 1\n        for i in range(m):\n            for j in range(n):\n                if i:\n                    f[i][j] += f[i - 1][j]\n                if j:\n                    f[i][j] += f[i][j - 1]\n        return f[-1][-1]\n",
+ "draft": null
+}

@@ -1,0 +1,145 @@
+{
+ "id": "lc-159",
+ "status": "pending",
+ "source": {
+  "dataset": "newfacade/LeetCodeDataset",
+  "license": "Apache-2.0",
+  "questionId": 159,
+  "taskId": "longest-substring-with-at-most-two-distinct-characters",
+  "tags": [
+   "Hash Table",
+   "String",
+   "Sliding Window"
+  ]
+ },
+ "difficulty": "medium",
+ "topic": "sliding-window",
+ "functionName": {
+  "python": "length_of_longest_substring_two_distinct",
+  "javascript": "lengthOfLongestSubstringTwoDistinct"
+ },
+ "params": [
+  "s"
+ ],
+ "compare": "exact",
+ "tests": [
+  {
+   "args": [
+    "xyzxyzxyz"
+   ],
+   "expected": 2
+  },
+  {
+   "args": [
+    "ababccababcc"
+   ],
+   "expected": 4
+  },
+  {
+   "args": [
+    "aabbaaabbbaaa"
+   ],
+   "expected": 13
+  }
+ ],
+ "hiddenTests": [
+  {
+   "args": [
+    ""
+   ],
+   "expected": 0
+  },
+  {
+   "args": [
+    "eceba"
+   ],
+   "expected": 3
+  },
+  {
+   "args": [
+    "ccaabbb"
+   ],
+   "expected": 5
+  },
+  {
+   "args": [
+    "abcabcabc"
+   ],
+   "expected": 2
+  },
+  {
+   "args": [
+    "abracadabra"
+   ],
+   "expected": 3
+  },
+  {
+   "args": [
+    "aabbccddeeff"
+   ],
+   "expected": 4
+  },
+  {
+   "args": [
+    "zzzzzzzzzzzzz"
+   ],
+   "expected": 13
+  },
+  {
+   "args": [
+    "abcdabcdeabcdefg"
+   ],
+   "expected": 2
+  },
+  {
+   "args": [
+    "aaaaaabbbbbcccccc"
+   ],
+   "expected": 11
+  },
+  {
+   "args": [
+    "zzzzzzzzzzzzzzzzzz"
+   ],
+   "expected": 18
+  },
+  {
+   "args": [
+    "aabbaabbbccccddeeeeffff"
+   ],
+   "expected": 9
+  },
+  {
+   "args": [
+    "zyxwvutsrqponmlkjihgfedcba"
+   ],
+   "expected": 2
+  },
+  {
+   "args": [
+    "aabbbbbbaaaaabbbaaabbbaabbbaaa"
+   ],
+   "expected": 30
+  },
+  {
+   "args": [
+    "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"
+   ],
+   "expected": 42
+  },
+  {
+   "args": [
+    "aabbccddeeffgghhiijjkkllmmnnooppqqrrssttuuvvwwxxyyzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"
+   ],
+   "expected": 54
+  }
+ ],
+ "verification": {
+  "datasetCases": 80,
+  "parsedCases": 80,
+  "agreedCases": 80,
+  "secondSolution": true
+ },
+ "referenceSolution": "class Solution:\n    def lengthOfLongestSubstringTwoDistinct(self, s: str) -> int:\n        cnt = Counter()\n        ans = j = 0\n        for i, c in enumerate(s):\n            cnt[c] += 1\n            while len(cnt) > 2:\n                cnt[s[j]] -= 1\n                if cnt[s[j]] == 0:\n                    cnt.pop(s[j])\n                j += 1\n            ans = max(ans, i - j + 1)\n        return ans\n",
+ "draft": null
+}
