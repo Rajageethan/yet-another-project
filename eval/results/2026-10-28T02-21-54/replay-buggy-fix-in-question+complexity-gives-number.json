@@ -1,0 +1,212 @@
+{
+ "configs": [
+  {
+   "id": "A",
+   "label": "baseline: gpt-oss-120b, reasoning low (production)",
+   "model": "openai/gpt-oss-120b",
+   "effort": "low",
+   "maxTokens": 700
+  },
+  {
+   "id": "B",
+   "label": "same model, reasoning high",
+   "model": "openai/gpt-oss-120b",
+   "effort": "high",
+   "maxTokens": 4000
+  },
+  {
+   "id": "C",
+   "label": "different model: qwen3.8-27b",
+   "model": "qwen/qwen3.8-27b",
+   "maxTokens": 4000
+  },
+  {
+   "id": "D",
+   "label": "same model, reasoning low + self-check before replying",
+   "model": "openai/gpt-oss-120b",
+   "effort": "low",
+   "checklist": true,
+   "maxTokens": 700
+  }
+ ],
+ "moments": [
+  {
+   "id": "misread-agrees",
+   "scenario": "misread",
+   "reply": "Right, we need the two numbers",
+   "pass": "Does not agree that it returns the values and does not state 'indices'; makes the student check the example output or the statement.",
+   "bad": "^\\s*(right|yes|correct|exactly)|\\bindices\\b"
+  },
+  {
+   "id": "lost-insight",
+   "scenario": "lost",
+   "reply": "For the strings",
+   "pass": "Reflects the student's 'the last one opened closes first' idea back to them and builds the next question on it."
+  },
+  {
+   "id": "lost-jargon",
+   "scenario": "lost",
+   "reply": "When you repeatedly scan the string",
+   "pass": "Drops the jargon ('examined', 'worst case'), gives one tiny concrete step, doesn't repeat the previous question."
+  },
+  {
+   "id": "buggy-fix-in-question",
+   "scenario": "buggy_code",
+   "reply": "How could you modify line 7",
+   "pass": "The question doesn't contain the fix (no 'only move forward', 'max', 'greater than the current left'); it asks what left should be or why.",
+   "bad": "\\bmax\\b|only (move|go)s? forward|greater than (the )?(current )?`?left"
+  },
+  {
+   "id": "paster-explain",
+   "scenario": "paster",
+   "reply": "Before submitting, can you restate",
+   "pass": "Asks the student to explain the pasted code they claim is done (why a set, a specific line), instead of restating the problem."
+  },
+  {
+   "id": "seeker-method",
+   "scenario": "answer_seeker",
+   "reply": "If you keep a dictionary that maps",
+   "pass": "The question doesn't spell out the algorithm (dict of last index + left boundary + window length); it asks one small step about the problem.",
+   "bad": "most.recent index|left (boundary|edge)"
+  },
+  {
+   "id": "complexity-pullback",
+   "scenario": "complexity_confused",
+   "reply": "If you were to implement the linear scan",
+   "pass": "Does not send the now-convinced student back to the linear scan; moves toward halving / binary search.",
+   "bad": "linear scan|loop condition"
+  },
+  {
+   "id": "complexity-gives-number",
+   "scenario": "complexity_confused",
+   "reply": "Right, 1 000 000 vs about 20",
+   "pass": "Lets the student work out the number of halvings themselves instead of stating ~20.",
+   "bad": "\\b20\\b"
+  }
+ ],
+ "results": [
+  {
+   "moment": "buggy-fix-in-question",
+   "config": "C",
+   "sample": 0,
+   "full": "[[stage:optimize]] You found the bug. How would you fix line 7 so `left` only moves forward?",
+   "shown": "You found the bug. How would you fix line 7 so `left` only moves forward?",
+   "tokens": 2032,
+   "flagged": true
+  },
+  {
+   "moment": "buggy-fix-in-question",
+   "config": "A",
+   "sample": 0,
+   "error": "429 Rate limit reached for model `openai/gpt-oss-120b` in organization `org_01k2vjym99eyhv6x7j83c51bbs` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 7049, Requested 2366. Please try again in 10.6125s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/se"
+  },
+  {
+   "moment": "complexity-gives-number",
+   "config": "A",
+   "sample": 0,
+   "full": "[[stage:understand]] Correct, about 20 steps. Now, what should the function return when the target is not found in `nums`?[[stage:examples]] Great. If `nums = [2, 5, 8]` and `target = 5`, what should the function return? And what about `target = 7`?[[stage:examples]] For `nums = [2, 5, 8]` and `target = 5`, what index should be returned? And for `target = 7`, what should be returned?",
+   "shown": "Correct, about 20 steps. Now, what should the function return when the target is not found in `nums`?",
+   "tokens": 1791,
+   "flagged": true
+  },
+  {
+   "moment": "buggy-fix-in-question",
+   "config": "C",
+   "sample": 1,
+   "full": "[[stage:optimize]] You found the bug. How would you modify line 7 so `left` only moves forward, never backward?",
+   "shown": "You found the bug. How would you modify line 7 so `left` only moves forward, never backward?",
+   "tokens": 2035,
+   "flagged": true
+  },
+  {
+   "moment": "buggy-fix-in-question",
+   "config": "B",
+   "sample": 0,
+   "full": "[[stage:optimize]] What condition could you test before assigning `left = last[ch] + 1` to ensure that `left` only moves forward, never backward?",
+   "shown": "What condition could you test before assigning `left = last[ch] + 1` to ensure that `left` only moves forward, never backward?",
+   "tokens": 2369,
+   "flagged": true
+  },
+  {
+   "moment": "complexity-gives-number",
+   "config": "C",
+   "sample": 0,
+   "full": "[[stage:understand]] Exactly: about 20 halvings versus a million checks. So O(log n) is much faster for large inputs. Now, what does the function need to return when `target` is not in `nums`?",
+   "shown": "Exactly: about 20 halvings versus a million checks. So O(log n) is much faster for large inputs. Now, what does the function need to return when `target` is not in `nums`?",
+   "tokens": 1716,
+   "flagged": true
+  },
+  {
+   "moment": "buggy-fix-in-question",
+   "config": "B",
+   "sample": 1,
+   "full": "[[stage:optimize]] What condition could you check before setting `left = last[ch] + 1` to ensure `left` never moves backward?",
+   "shown": "What condition could you check before setting `left = last[ch] + 1` to ensure `left` never moves backward?",
+   "tokens": 2368,
+   "flagged": false
+  },
+  {
+   "moment": "complexity-gives-number",
+   "config": "C",
+   "sample": 1,
+   "full": "[[stage:understand]] Yes, about 20 steps. Now that you see why O(log n) is faster, what’s the key idea behind halving the search range each step?",
+   "shown": "Yes, about 20 steps. Now that you see why O(log n) is faster, what’s the key idea behind halving the search range each step?",
+   "tokens": 1705,
+   "flagged": true
+  },
+  {
+   "moment": "complexity-gives-number",
+   "config": "B",
+   "sample": 0,
+   "full": "[[stage:understand]] If `nums = [2, 5, 7]` and `target = 4`, what should `search(nums, target)` return?",
+   "shown": "If `nums = [2, 5, 7]` and `target = 4`, what should `search(nums, target)` return?",
+   "tokens": 2454,
+   "flagged": false
+  },
+  {
+   "moment": "complexity-gives-number",
+   "config": "B",
+   "sample": 1,
+   "full": "[[stage:understand]] If you have 1,000,000 items, how many comparisons does a linear scan need in the worst case, and how many does repeatedly halving the range need?",
+   "shown": "If you have 1,000,000 items, how many comparisons does a linear scan need in the worst case, and how many does repeatedly halving the range need?",
+   "tokens": 2421,
+   "flagged": false
+  },
+  {
+   "moment": "buggy-fix-in-question",
+   "config": "D",
+   "sample": 0,
+   "full": "[[stage:optimize]] How could you modify line 7 so that `left` only moves forward when `last[ch] + 1` is greater than its current value? (Think of a single expression that preserves the larger of the two).",
+   "shown": "How could you modify line 7 so that `left` only moves forward when `last[ch] + 1` is greater than its current value?",
+   "tokens": 2202,
+   "flagged": true
+  },
+  {
+   "moment": "buggy-fix-in-question",
+   "config": "D",
+   "sample": 1,
+   "full": "[[stage:optimize]] How could you modify line 7 so that `left` only moves forward when `last[ch] + 1` is greater than the current `left`?",
+   "shown": "How could you modify line 7 so that `left` only moves forward when `last[ch] + 1` is greater than the current `left`?",
+   "tokens": 2190,
+   "flagged": true
+  },
+  {
+   "moment": "complexity-gives-number",
+   "config": "D",
+   "sample": 0,
+   "full": "[[stage:understand]] Good, you see the step count difference. Now, what should the function return when `nums` is empty, regardless of `target`?[[stage:examples]] If `nums = [2,5,8]` and `target = 5`, what index should be returned? And if `target = 7`, what should be returned?[[stage:brute_force]] If you were to scan `nums` from left to right, what condition would tell you to stop and return the current index?[[stage:brute_force]] When scanning, how do you decide whether to continue to the next element or return `-1` after the loop finishes?[[stage:brute_force]] If you reach an element larger than `target` while scanning, what can you conclude about the rest of the list and what should you return?[[stage:optimize]] Your scanning idea stops only when it finds `target` or reaches the end. How could you use the fact that the list is sorted to possibly avoid looking at every element?[[stage:optimize]] When you look at the middle element of a sorted list, what does it tell you about where `target` could be relative to the left or right half?[[stage:optimize]] If the middle element is greater than `target`, which part of the list can you safely ignore for the next step?[[stage:optimize]] Suppose you keep track of the current search interval with two indices, `lo` and `hi`. After comparing `target` with the middle element, how should you update `lo` or `hi` to narrow the interval?[[stage:code]] Please outline the main steps you’d take in code (no need to write full syntax) to repeatedly narrow the interval until you either find `target` or exhaust the search space?[[stage:code]] Which `while` condition will ensure the loop stops exactly when there are no more elements to examine?[[stage:code]] In line 2 of your stub `def search(nums, target):` what variable will you introduce to represent the left boundary `lo` of the current range?[[stage:code]] What exact the the ````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````",
+   "shown": "Good, you see the step count difference. Now, what should the function return when `nums` is empty, regardless of `target`?",
+   "tokens": 2491,
+   "flagged": false
+  },
+  {
+   "moment": "complexity-gives-number",
+   "config": "D",
+   "sample": 1,
+   "full": "[[stage:understand]] Great, you see the step count difference. Now, in your own words, what should the function return when `target` is not found in `nums`?[[stage:examples]] Suppose `nums = [2,5,8,12]`. What should `search(nums, 8)` return, and what about `search(nums, 7)`?[[stage:brute_force]] If you were to implement the linear scan, what condition would you check at each index to decide whether to return that index?[[stage:brute_force]] In your loop, when you find `nums[i] == target`, what do you return, and what do you return after the loop finishes without a match?[[stage:brute_force]] How would you handle the case when `nums` is empty before entering the loop?[[stage:brute_force]] If `nums` is empty, what should the function immediately return without any iteration?[[stage:brute_force]] What value will you return if you finish scanning all elements and never encounter `target`?[[stage:brute_force]] Can you write the loop that checks each element and returns the correct index or `-1` if not found?[[stage:brute_force]] Show me the full code for `search` using that linear scan, including the return for an empty list.[[stage:brute_force]] How does your loop ensure it stops after checking every element exactly once?[[stage:brute_force]] If you ran your linear‑scan version on `nums = [1,3,5]` with `target = 4`, what would it return and why?[[stage:optimize]] Your linear scan works, but you noted the step count difference. What part of the list can you safely ignore after comparing `target` with the middle element?",
+   "shown": "Great, you see the step count difference. Now, in your own words, what should the function return when `target` is not found in `nums`?",
+   "tokens": 2326,
+   "flagged": false
+  }
+ ]
+}

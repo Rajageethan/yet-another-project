@@ -31,3 +31,27 @@ because new or remaining failures offset it:
 - Run each scenario 3× and average; one run can't separate a real change from noise.
 - Simulator: put code the student writes in chat into the editor, so "type it in" loops don't count against the mentor.
 - Prompt: never open with agreement when the statement is wrong; for debugging, ask what a variable holds, never how to change the line; once a student accepts a faster idea, don't revisit the slower one.
+
+## Failure replays: model or harness? (`eval/replay.ts`, `replay*.md`)
+Each failing reply was asked again with the exact same context, changing one factor at a time (2 samples
+each; A = production, which includes the original failure). Pass/fail scored by hand against the "good
+reply" line in `replay.md`.
+
+| Moment | A: production (120b, reasoning low) | B: 120b, reasoning high | C: qwen3.8-27b | D: 120b low + self-check |
+|---|---|---|---|---|
+| misread: agrees, then states "indices" | 0/2 | 2/2 | 1/2 | 1/2 |
+| lost: ignores the stack insight | 0/2 | 1/2 | 2/2 | 0/2 |
+| lost: jargon to a confused beginner | 1/2 | 0/2 | 2/2 | 2/2 |
+| paster: approves pasted code | 0/2 | 0/2 | 0/2 | 0/2 |
+| answer_seeker: question spells the method | 0/2 | 1/2 | 2/2 | 0/2 |
+| complexity: pulls back to linear scan | 1/2 | 1/2 | 2/2 | 2/2 |
+| complexity: states "about 20" itself | 0/2 | 2/2 | 0/2 | 2/2 |
+| **Total** | **2/14** | **7/14** | **9/14** | **7/14** |
+| Avg tokens per call | 1,927 | 2,311 | 1,851 | 2,103 |
+
+Dropped: buggy_code "fix in the question". The student had already said "I don't check if it's actually
+bigger", so echoing it isn't a leak; the judge's flag was wrong.
+
+Conclusion: mostly harness. The same model passes half the failures with more reasoning (+20% tokens), and a
+smaller model passes two thirds, so capability isn't the main limit. One failure (pasted code) no config fixes:
+the paste is a single event two turns back, so the fact is lost. That needs state the harness keeps, not a better model.

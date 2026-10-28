@@ -1,0 +1,446 @@
+{
+ "configs": [
+  {
+   "id": "A",
+   "label": "baseline: gpt-oss-120b, reasoning low (production)",
+   "model": "openai/gpt-oss-120b",
+   "effort": "low",
+   "maxTokens": 700
+  },
+  {
+   "id": "B",
+   "label": "same model, reasoning high",
+   "model": "openai/gpt-oss-120b",
+   "effort": "high",
+   "maxTokens": 4000
+  },
+  {
+   "id": "C",
+   "label": "different model: qwen3.8-27b",
+   "model": "qwen/qwen3.8-27b",
+   "maxTokens": 4000
+  },
+  {
+   "id": "D",
+   "label": "same model, reasoning low + self-check before replying",
+   "model": "openai/gpt-oss-120b",
+   "effort": "low",
+   "checklist": true,
+   "maxTokens": 700
+  }
+ ],
+ "moments": [
+  {
+   "id": "misread-agrees",
+   "scenario": "misread",
+   "reply": "Right, we need the two numbers",
+   "pass": "Does not agree that it returns the values and does not state 'indices'; makes the student check the example output or the statement.",
+   "bad": "^\\s*(right|yes|correct|exactly)|\\bindices\\b"
+  },
+  {
+   "id": "lost-insight",
+   "scenario": "lost",
+   "reply": "For the strings",
+   "pass": "Reflects the student's 'the last one opened closes first' idea back to them and builds the next question on it."
+  },
+  {
+   "id": "lost-jargon",
+   "scenario": "lost",
+   "reply": "When you repeatedly scan the string",
+   "pass": "Drops the jargon ('examined', 'worst case'), gives one tiny concrete step, doesn't repeat the previous question."
+  },
+  {
+   "id": "buggy-fix-in-question",
+   "scenario": "buggy_code",
+   "reply": "How could you modify line 7",
+   "pass": "The question doesn't contain the fix (no 'only move forward', 'max', 'greater than the current left'); it asks what left should be or why.",
+   "bad": "\\bmax\\b|only (move|go)s? forward|greater than (the )?(current )?`?left"
+  },
+  {
+   "id": "paster-explain",
+   "scenario": "paster",
+   "reply": "Before submitting, can you restate",
+   "pass": "Asks the student to explain the pasted code they claim is done (why a set, a specific line), instead of restating the problem."
+  },
+  {
+   "id": "seeker-method",
+   "scenario": "answer_seeker",
+   "reply": "If you keep a dictionary that maps",
+   "pass": "The question doesn't spell out the algorithm (dict of last index + left boundary + window length); it asks one small step about the problem.",
+   "bad": "most.recent index|left (boundary|edge)"
+  },
+  {
+   "id": "complexity-pullback",
+   "scenario": "complexity_confused",
+   "reply": "If you were to implement the linear scan",
+   "pass": "Does not send the now-convinced student back to the linear scan; moves toward halving / binary search.",
+   "bad": "linear scan|loop condition"
+  },
+  {
+   "id": "complexity-gives-number",
+   "scenario": "complexity_confused",
+   "reply": "Right, 1 000 000 vs about 20",
+   "pass": "Lets the student work out the number of halvings themselves instead of stating ~20.",
+   "bad": "\\b20\\b"
+  }
+ ],
+ "results": [
+  {
+   "moment": "misread-agrees",
+   "config": "C",
+   "sample": 0,
+   "full": "[[stage:understand]] You are close, but there is a small mismatch with the problem statement. The prompt asks for indices, not the numbers themselves. What should the function return for `nums = [2, 7, 11]` and `target = 9`?",
+   "shown": "You are close, but there is a small mismatch with the problem statement. The prompt asks for indices, not the numbers themselves. What should the function return for `nums = [2, 7, 11]` and `target = 9`?",
+   "tokens": 1708,
+   "flagged": true
+  },
+  {
+   "moment": "misread-agrees",
+   "config": "A",
+   "sample": 0,
+   "full": "[[stage:understand]] Right, the problem asks for the **indices** of the two numbers, not the numbers themselves, and the indices must satisfy i < j. How would you restate the required output given an input list and a target?",
+   "shown": "Right, the problem asks for the **indices** of the two numbers, not the numbers themselves, and the indices must satisfy i < j. How would you restate the required output given an input list and a target?",
+   "tokens": 1714,
+   "flagged": true
+  },
+  {
+   "moment": "misread-agrees",
+   "config": "C",
+   "sample": 1,
+   "full": "[[stage:understand]] You are close, but check the problem statement again: what specific values does it ask you to return, not the numbers themselves?",
+   "shown": "You are close, but check the problem statement again: what specific values does it ask you to return, not the numbers themselves?",
+   "tokens": 1680,
+   "flagged": false
+  },
+  {
+   "moment": "lost-insight",
+   "config": "C",
+   "sample": 0,
+   "full": "[[stage:understand]] That’s exactly the core idea. Now, what should `is_balanced(\"\")` return, and why?",
+   "shown": "That’s exactly the core idea. Now, what should `is_balanced(\"\")` return, and why?",
+   "tokens": 1733
+  },
+  {
+   "moment": "lost-insight",
+   "config": "C",
+   "sample": 1,
+   "full": "[[stage:understand]] You nailed it—the last opened bracket must close first. Now, if you were to write a brute-force approach to check this, what would be the simplest (even if slow) way to verify the string is balanced?",
+   "shown": "You nailed it—the last opened bracket must close first. Now, if you were to write a brute-force approach to check this, what would be the simplest (even if slow) way to verify the string is balanced?",
+   "tokens": 1755
+  },
+  {
+   "moment": "lost-insight",
+   "config": "A",
+   "sample": 0,
+   "full": "[[stage:examples]] For the strings `\"\"`, `\"()\"`, `\"([)]\"` and `\"{[()]}\"`, what should `is_balanced` return and why for each?[[stage:examples]] How does the presence of an extra opening bracket, like in `\"((()\"`, affect the expected result?[[stage:brute_force]] Suppose you tried a naïve method that repeatedly scans the string and removes any adjacent matching pair like `\"()\"`, `\"[]\"`, or `\"{}\"` until no more can be removed. What would be the worst‑case number of scans needed for a string of length n, and why?[[stage:brute_force]] Can you write a short snippet (pseudocode or real Python) that follows this “remove adjacent pairs” idea for a given string `s`? No need to handle all edge cases yet—just show the core loop.[[stage:optimize]] Your removal‑loop idea repeatedly scans the whole string. What part of that process repeats work you’ve already examined, and how could you avoid re‑scanning those characters?[[stage:optimize]] If you could remember only the most recent unmatched opening bracket while scanning left‑to‑right, what would you need to check when you encounter a closing bracket?[[stage:optimize]] How would you handle the situation where a closing bracket appears but there’s no opening bracket remembered yet?[[stage:code]] Write the core part of `is_balanced` that processes each character of `s` using the idea we just discussed, without worrying about the final return statement yet. Use a variable to store your “remembered” items.[[stage:test]] Take your current implementation and run it on the strings `\"([{}])\"`, `\"{[()]\"`, and `\"((())))))\"`. What does it output for each, and which ones are correct according to the problem definition?[[stage:test]] For the test case that produced an incorrect result, can you step through your code line by line on that input and note the values of the key variables after each character is processed?[[stage:complexity]] Assuming your final version uses the “remember the most recent opening” idea, what is the time complexity in terms of n, and why does it improve over the removal‑pair approach?[[stage:reflect]] Looking back at the whole process—from restating the problem to the final complexity—what was the single most important insight that let you move from a slow brute force to an efficient solution?",
+   "shown": "For the strings `\"\"`, `\"()\"`, `\"([)]\"` and `\"{[()]}\"`, what should `is_balanced` return and why for each?",
+   "tokens": 2383
+  },
+  {
+   "moment": "lost-jargon",
+   "config": "A",
+   "sample": 0,
+   "full": "[[stage:optimize]] When you read the string from left to right, what single piece of information could you keep that tells you which opening bracket must be matched next?",
+   "shown": "When you read the string from left to right, what single piece of information could you keep that tells you which opening bracket must be matched next?",
+   "tokens": 1961
+  },
+  {
+   "moment": "paster-explain",
+   "config": "A",
+   "sample": 0,
+   "full": "[[stage:examples]] Great, the code looks plausible. What should `has_duplicate([])` return, and why?",
+   "shown": "Great, the code looks plausible. What should `has_duplicate([])` return, and why?",
+   "tokens": 1689
+  },
+  {
+   "moment": "seeker-method",
+   "config": "A",
+   "sample": 0,
+   "full": "[[stage:code]] If you keep a dictionary that maps each character to its most recent index, how can you use that value together with your current left‑boundary variable to decide the new left position when a repeat appears?",
+   "shown": "If you keep a dictionary that maps each character to its most recent index, how can you use that value together with your current left‑boundary variable to decide the new left position when a repeat appears?",
+   "tokens": 1954,
+   "flagged": true
+  },
+  {
+   "moment": "lost-jargon",
+   "config": "C",
+   "sample": 0,
+   "full": "[[stage:brute_force]] That’s fine—let’s keep it simple. If you scan left to right and every time you see a matching pair like `\"()\"` you remove it, what would happen to `\"{[()]}\"` step by step, and how many removals would you need before you’re done?",
+   "shown": "That’s fine—let’s keep it simple. If you scan left to right and every time you see a matching pair like `\"()\"` you remove it, what would happen to `\"{[()]}\"` step by step, and how many removals would you need before you’re done?",
+   "tokens": 1993
+  },
+  {
+   "moment": "complexity-pullback",
+   "config": "A",
+   "sample": 0,
+   "full": "[[stage:examples]] Good. What should the function return when the target is smaller than the first element, say `nums = [2,4,6]` and `target = 1`?[[stage:examples]] What should the function return when the target is larger than the last element, for example `nums = [2,4,6]` and `target = 10`?",
+   "shown": "Good. What should the function return when the target is smaller than the first element, say `nums = [2,4,6]` and `target = 1`?",
+   "tokens": 1996,
+   "flagged": false
+  },
+  {
+   "moment": "lost-jargon",
+   "config": "C",
+   "sample": 1,
+   "full": "[[stage:brute_force]] Let's simplify: for the string `\"()()\"`, how many total removal steps would your method need, and which pairs get removed in each step?",
+   "shown": "Let's simplify: for the string `\"()()\"`, how many total removal steps would your method need, and which pairs get removed in each step?",
+   "tokens": 1964
+  },
+  {
+   "moment": "misread-agrees",
+   "config": "B",
+   "sample": 0,
+   "full": "[[stage:understand]] Given `nums = [2, 7, 11, 15]` and `target = 9`, what should `pair_with_sum` return: the two numbers themselves or something else?",
+   "shown": "Given `nums = [2, 7, 11, 15]` and `target = 9`, what should `pair_with_sum` return: the two numbers themselves or something else?",
+   "tokens": 2173,
+   "flagged": false
+  },
+  {
+   "moment": "paster-explain",
+   "config": "C",
+   "sample": 0,
+   "full": "[[stage:test]] Your logic looks solid. Before submitting, what does your function return if `nums` is an empty list, and does that match the expected behavior?",
+   "shown": "Your logic looks solid. Before submitting, what does your function return if `nums` is an empty list, and does that match the expected behavior?",
+   "tokens": 1700
+  },
+  {
+   "moment": "misread-agrees",
+   "config": "B",
+   "sample": 1,
+   "full": "[[stage:understand]] If `nums = [2, 7, 11, 15]` and `target = 9`, what exactly should `pair_with_sum` return for this input?",
+   "shown": "If `nums = [2, 7, 11, 15]` and `target = 9`, what exactly should `pair_with_sum` return for this input?",
+   "tokens": 1891,
+   "flagged": false
+  },
+  {
+   "moment": "paster-explain",
+   "config": "C",
+   "sample": 1,
+   "full": "[[stage:test]] Before submitting, try testing your code with an empty list and a list with one element. What do you expect it to return in those cases, and does your code actually do that?",
+   "shown": "Before submitting, try testing your code with an empty list and a list with one element. What do you expect it to return in those cases, and does your code actually do that?",
+   "tokens": 1707
+  },
+  {
+   "moment": "lost-insight",
+   "config": "B",
+   "sample": 0,
+   "full": "[[stage:examples]] Great, that's the core idea. To be sure you understand all cases, what should `is_balanced` return for the inputs `\"\"`, `\"(\"`, and `\")\"`? Explain each answer briefly.",
+   "shown": "Great, that's the core idea. To be sure you understand all cases, what should `is_balanced` return for the inputs `\"\"`, `\"(\"`, and `\")\"`?",
+   "tokens": 2297
+  },
+  {
+   "moment": "seeker-method",
+   "config": "C",
+   "sample": 0,
+   "full": "[[stage:code]] Storing the last index in a map is the right idea. When you find a repeat at index `right`, how do you decide the new value for `left` so that it never moves backwards?",
+   "shown": "Storing the last index in a map is the right idea. When you find a repeat at index `right`, how do you decide the new value for `left` so that it never moves backwards?",
+   "tokens": 1963,
+   "flagged": false
+  },
+  {
+   "moment": "lost-insight",
+   "config": "B",
+   "sample": 1,
+   "full": "[[stage:understand]] Can you restate the problem in your own words, specifying what the function receives, what it should return, and any important constraints on the input size?",
+   "shown": "Can you restate the problem in your own words, specifying what the function receives, what it should return, and any important constraints on the input size?",
+   "tokens": 2008
+  },
+  {
+   "moment": "seeker-method",
+   "config": "C",
+   "sample": 1,
+   "full": "[[stage:code]] You named the right structure. Start by initializing that map and two pointers for your window. What should the initial values for those pointers be?",
+   "shown": "You named the right structure. Start by initializing that map and two pointers for your window. What should the initial values for those pointers be?",
+   "tokens": 1950,
+   "flagged": false
+  },
+  {
+   "moment": "lost-jargon",
+   "config": "B",
+   "sample": 0,
+   "full": "[[stage:optimize]] Consider a string of n '(' followed by n ')'. In your repeated‑pair‑removal approach, how many times could the first '(' be examined before the string is fully reduced?",
+   "shown": "Consider a string of n '(' followed by n ')'. In your repeated‑pair‑removal approach, how many times could the first '(' be examined before the string is fully reduced?",
+   "tokens": 2811
+  },
+  {
+   "moment": "complexity-pullback",
+   "config": "C",
+   "sample": 0,
+   "full": "[[stage:examples]] Those are correct. What about a case where the target is smaller than every element, like `nums = [2, 4, 6]` and `target = 1`?",
+   "shown": "Those are correct. What about a case where the target is smaller than every element, like `nums = [2, 4, 6]` and `target = 1`?",
+   "tokens": 1986,
+   "flagged": false
+  },
+  {
+   "moment": "lost-jargon",
+   "config": "B",
+   "sample": 1,
+   "full": "[[stage:optimize]] Consider the string `\"((()))\"`. If you repeatedly scan the whole string to delete any adjacent matching pair, how many times will the first `'('` be examined across all passes?",
+   "shown": "Consider the string `\"((()))\"`. If you repeatedly scan the whole string to delete any adjacent matching pair, how many times will the first `'('` be examined across all passes?",
+   "tokens": 2567
+  },
+  {
+   "moment": "complexity-pullback",
+   "config": "C",
+   "sample": 1,
+   "full": "[[stage:examples]] Right: `[1,3,5]` with target `3` returns `1`, and `[]` returns `-1`. What about a target that is smaller than the first element or larger than the last?",
+   "shown": "Right: `[1,3,5]` with target `3` returns `1`, and `[]` returns `-1`. What about a target that is smaller than the first element or larger than the last?",
+   "tokens": 1991,
+   "flagged": false
+  },
+  {
+   "moment": "paster-explain",
+   "config": "B",
+   "sample": 0,
+   "full": "[[stage:understand]] Can you restate the problem in your own words, describing what the input list looks like, what the function should return, and any special cases the statement mentions?",
+   "shown": "Can you restate the problem in your own words, describing what the input list looks like, what the function should return, and any special cases the statement mentions?",
+   "tokens": 2004
+  },
+  {
+   "moment": "paster-explain",
+   "config": "B",
+   "sample": 1,
+   "full": "[[stage:understand]] Before you submit, can you restate the problem in your own words: what the function receives, what it should return, and any special cases you need to handle?",
+   "shown": "Before you submit, can you restate the problem in your own words: what the function receives, what it should return, and any special cases you need to handle?",
+   "tokens": 1899
+  },
+  {
+   "moment": "seeker-method",
+   "config": "B",
+   "sample": 0,
+   "full": "[[stage:code]] In line 2, what initial values should you set for the left pointer and the map before the loop, and when you encounter a repeated character, how will you update the left pointer using the stored index while ensuring it never moves backward?",
+   "shown": "In line 2, what initial values should you set for the left pointer and the map before the loop, and when you encounter a repeated character, how will you update the left pointer using the stored index while ensuring it never moves backward?",
+   "tokens": 2730,
+   "flagged": false
+  },
+  {
+   "moment": "seeker-method",
+   "config": "B",
+   "sample": 1,
+   "full": "[[stage:code]] Good, a map of last indices is useful. When you encounter a character `c` at position `i` that already exists in that map, how can you compute the new left boundary so the window stays free of repeats?",
+   "shown": "Good, a map of last indices is useful. When you encounter a character `c` at position `i` that already exists in that map, how can you compute the new left boundary so the window stays free of repeats?",
+   "tokens": 2230,
+   "flagged": true
+  },
+  {
+   "moment": "complexity-pullback",
+   "config": "B",
+   "sample": 0,
+   "full": "[[stage:brute_force]] How would you fill in `search` to scan each element until you find `target` (or finish), and what is the worst‑case time complexity of that approach?",
+   "shown": "How would you fill in `search` to scan each element until you find `target` (or finish), and what is the worst‑case time complexity of that approach?",
+   "tokens": 2389,
+   "flagged": false
+  },
+  {
+   "moment": "complexity-pullback",
+   "config": "B",
+   "sample": 1,
+   "full": "[[stage:examples]] Good. Now consider a list with a single element, e.g., `[2]`. What should `search([2], 2)` return, and what should `search([2], 3)` return?",
+   "shown": "Good. Now consider a list with a single element, e.g., `[2]`. What should `search([2], 2)` return, and what should `search([2], 3)` return?",
+   "tokens": 2367,
+   "flagged": false
+  },
+  {
+   "moment": "misread-agrees",
+   "config": "D",
+   "sample": 0,
+   "full": "[[stage:understand]] You’ve got the goal of finding two numbers that sum to `target`. What exactly should the function return: the numbers themselves or something else? How should the order of the returned pair be defined?",
+   "shown": "You’ve got the goal of finding two numbers that sum to `target`. What exactly should the function return: the numbers themselves or something else?",
+   "tokens": 1869,
+   "flagged": false
+  },
+  {
+   "moment": "misread-agrees",
+   "config": "D",
+   "sample": 1,
+   "full": "[[stage:understand]] Remember the problem asks for indices, not the values themselves. What should the function return for `nums = [2, 7, 11, 15]` and `target = 9`?",
+   "shown": "Remember the problem asks for indices, not the values themselves. What should the function return for `nums = [2, 7, 11, 15]` and `target = 9`?",
+   "tokens": 1880,
+   "flagged": true
+  },
+  {
+   "moment": "lost-insight",
+   "config": "D",
+   "sample": 0,
+   "full": "[[stage:examples]] For the strings `\"\"`, `\"()\"`, `\"([)]\"` and `\"{[()]}\"`, what should `is_balanced` return and why for each?",
+   "shown": "For the strings `\"\"`, `\"()\"`, `\"([)]\"` and `\"{[()]}\"`, what should `is_balanced` return and why for each?",
+   "tokens": 1915
+  },
+  {
+   "moment": "lost-insight",
+   "config": "D",
+   "sample": 1,
+   "full": "[[stage:examples]] Can you list a few more strings (including the empty string) and state whether `is_balanced` should return `True` or `False` for each, explaining your reasoning?",
+   "shown": "Can you list a few more strings (including the empty string) and state whether `is_balanced` should return `True` or `False` for each, explaining your reasoning?",
+   "tokens": 1920
+  },
+  {
+   "moment": "lost-jargon",
+   "config": "D",
+   "sample": 0,
+   "full": "[[stage:optimize]] When you look at the string from left to right, what information do you need to remember about the brackets you have seen so far in order to decide whether the next closing bracket is correct?",
+   "shown": "When you look at the string from left to right, what information do you need to remember about the brackets you have seen so far in order to decide whether the next closing bracket is correct?",
+   "tokens": 2131
+  },
+  {
+   "moment": "lost-jargon",
+   "config": "D",
+   "sample": 1,
+   "full": "[[stage:optimize]] When you read the string from left to right, what information do you need to keep about the brackets you have seen so far to decide instantly whether a new closing bracket is valid?",
+   "shown": "When you read the string from left to right, what information do you need to keep about the brackets you have seen so far to decide instantly whether a new closing bracket is valid?",
+   "tokens": 2129
+  },
+  {
+   "moment": "paster-explain",
+   "config": "D",
+   "sample": 0,
+   "full": "[[stage:examples]] Great, you’ve written the core loop. What should the function return for the input `nums = []` and for `nums = [42]`, and why?",
+   "shown": "Great, you’ve written the core loop. What should the function return for the input `nums = []` and for `nums = [42]`, and why?",
+   "tokens": 1870
+  },
+  {
+   "moment": "paster-explain",
+   "config": "D",
+   "sample": 1,
+   "full": "[[stage:examples]] Great, you’ve written the code. What should the function return for the input `nums = []` and why?",
+   "shown": "Great, you’ve written the code. What should the function return for the input `nums = []` and why?",
+   "tokens": 1868
+  },
+  {
+   "moment": "seeker-method",
+   "config": "D",
+   "sample": 0,
+   "full": "[[stage:code]] If you keep a dictionary that maps each character to its most‑recent index, how would you compute the new position of the left pointer when the current character’s stored index is inside the current window?[[stage:code]] Great. Suppose you have `left = 2` and you encounter `'c'` whose last‑seen index in your dictionary is `4`. What should the new value of `left` become, and why?[[stage:code]] If the stored index for the repeated character is **before** the current `left`, what should you do with `left`?[[stage:code]] When you move `left` forward, how do you then compute the length of the current window to possibly update the maximum length seen so far?",
+   "shown": "If you keep a dictionary that maps each character to its most‑recent index, how would you compute the new position of the left pointer when the current character’s stored index is inside the current window?",
+   "tokens": 2270,
+   "flagged": true
+  },
+  {
+   "moment": "seeker-method",
+   "config": "D",
+   "sample": 1,
+   "full": "[[stage:code]] If you keep a dictionary that maps each character to the index where it last appeared, how can you use that value together with your current left‑boundary index to compute the new left boundary when a repeat is found?",
+   "shown": "If you keep a dictionary that maps each character to the index where it last appeared, how can you use that value together with your current left‑boundary index to compute the new left boundary when a repeat is found?",
+   "tokens": 2120,
+   "flagged": true
+  },
+  {
+   "moment": "complexity-pullback",
+   "config": "D",
+   "sample": 0,
+   "full": "[[stage:examples]] Good. What should the function return when the target is the first element of a non‑empty list and when it is the last element?[[stage:brute_force]] Got it. How would you implement the linear scan you described earlier? Write a short loop that checks each element and returns its index or -1.[[stage:brute_force]] In your loop, which variable will hold the current index you’re checking, and how do you compare its value to `target` before deciding to return?",
+   "shown": "Good. What should the function return when the target is the first element of a non‑empty list and when it is the last element?",
+   "tokens": 2213,
+   "flagged": false
+  },
+  {
+   "moment": "complexity-pullback",
+   "config": "D",
+   "sample": 1,
+   "full": "[[stage:examples]] Good. What should the function return when the target is the first element of a non‑empty list and when it is the last element?[[stage:brute_force]] Great. If you were to implement the linear scan, what loop condition would you use to stop early when you find the target?[[stage:brute_force]] If you iterate with an index `i`, how would you write the `if` statement that checks each `nums[i]` against `target` and returns `i` immediately when they match?[[stage:brute_force]] How would you express that `if` condition in code, and what would you return right after finding the match?",
+   "shown": "Good. What should the function return when the target is the first element of a non‑empty list and when it is the last element?",
+   "tokens": 2258,
+   "flagged": false
+  }
+ ]
+}
