@@ -196,8 +196,10 @@ const STAGE_TAG = /^\s*\[\[\s*stage\s*:\s*([a-z _-]+?)\s*\]\]\s*/i;
  * complete, parsed, and never shown to the student.
  */
 async function streamReply(llm: ReturnType<typeof getLlm>, messages: ChatCompletionMessageParam[], send: (e: MentorEvent) => void) {
-  // Reasoning tokens count toward the completion limit, so leave room for them before the reply.
-  const stream = await streamMentor(llm, { messages, temperature: 0.4, max_completion_tokens: 2500 });
+  // Reasoning tokens count toward the completion limit, so leave room for them (high effort used up to
+  // ~1,100 in eval/replay.ts). Not more: Groq reserves the whole limit against the 8K tokens/min budget,
+  // and at 2,500 two turns a minute already went over and fell back to the smaller model.
+  const stream = await streamMentor(llm, { messages, temperature: 0.4, max_completion_tokens: 1200 });
   let head = "";
   let decided = false;
   let stage: StageId | null = null;
@@ -228,6 +230,8 @@ async function streamReply(llm: ReturnType<typeof getLlm>, messages: ChatComplet
   };
   for await (const chunk of stream) {
     if (done) break; // leaving the loop aborts the request
+    // Reasoning can use up the whole completion limit before any reply text; make that visible.
+    if (chunk.choices[0]?.finish_reason === "length" && !text && !head) console.warn("[mentor] reply hit the token limit before any text");
     const delta = chunk.choices[0]?.delta?.content;
     if (!delta) continue;
     if (decided) {

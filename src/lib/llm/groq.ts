@@ -116,6 +116,11 @@ async function withFallback<R>(models: string[], run: (model: string) => Promise
         if (!isRetryable(err)) throw toLlmError(err);
         // On a rate limit, move to the next model (separate budget) after one short wait.
         if (attempt === 0) await sleep(Math.min(retryAfterMs(err, attempt), 3000));
+        else {
+          // Groq's message says which limit was hit (tokens/requests per minute/day) and the counts.
+          const why = err instanceof OpenAI.APIError ? `${err.status} ${err.message.replace(/org_\w+/g, "org").slice(0, 220)}` : "?";
+          console.warn(`[groq] ${model} still failing (${why}), falling back to the next model`);
+        }
       }
     }
   }
