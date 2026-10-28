@@ -12,6 +12,7 @@ import { STAGES } from "@/lib/mentor/stages";
  *   #line      reply mentions "line 2" (an editor highlight)
  *   FAIL_ONCE  the first reply to this exact message fails, the retry succeeds
  *   #slow      the reply streams slowly (about 3 s), to test leaving mid-reply
+ *   #state     reply says whether the latest message carries the "pasted code not yet explained" note
  */
 export const fakeLlmEnabled =
   process.env.E2E_FAKE_LLM === "1" && (process.env.NODE_ENV !== "production" || process.env.E2E_TEST_SERVER === "1");
@@ -48,7 +49,11 @@ function reply(messages: Msg[]): string {
   else if (instructions.includes("pressed the Hint button")) body = "Here is a nudge: what do you need to remember as you go?";
   else if (instructions.includes("test run just failed")) body = "Your run failed. Look at line 2. What does it return there?";
   else if (instructions.includes("just pasted")) body = "Walk me through line 2 of what you pasted. What does it do?";
-  else {
+  else if (said.includes("#state")) {
+    body = lastUser.includes("PASTED CODE NOT YET EXPLAINED")
+      ? "You pasted that code. What does line 2 do, in your own words?"
+      : "Nothing pending from earlier. What is your next step?";
+  } else {
     const quote = said.replace(/#advance|#line|#slow/g, "").trim().slice(0, 60);
     body = `You said: "${quote}". ${said.includes("#line") ? "Look at line 2. " : ""}What is your next step?`;
   }

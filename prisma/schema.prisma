@@ -80,6 +80,10 @@ model Session {
   summarizedCount Int       @default(0)
   /// Code as the mentor last saw it, for diffs
   lastMentorCode  String    @default("")
+  /// JSON StudentState (src/lib/mentor/state.ts): claims, insights, approach the mentor must keep in mind
+  studentState     String    @default("{}")
+  /// Set when the student pastes code; cleared once they explain it
+  pasteUnexplained Boolean   @default(false)
   lastInterruptAt DateTime?
   startedAt       DateTime  @default(now())
   solvedAt        DateTime?

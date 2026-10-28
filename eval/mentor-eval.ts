@@ -30,6 +30,7 @@ type Problem = {
   constraints: string[];
   functionName: { python: string };
   params: string[];
+  starter: { python: string };
   tests: { args: unknown[]; expected: unknown }[];
   mentorNotes: { keyInsight: string; bruteForce: string; optimal: string; commonMistakes: string[] };
 };
@@ -168,7 +169,12 @@ async function applyAction(client: Client, sessionId: string, a: Action, log: En
 
 // ------------------------------------------------------------------ simulated student
 
-async function studentMessage(s: Scenario, log: Entry[]) {
+/**
+ * The simulated student's next turn. Code goes in the editor, as in the app: the simulator puts the whole
+ * file in <code>…</code>, which is saved as a snapshot and stripped from the chat message. (Before, code
+ * typed into the chat never reached the editor, and the mentor kept asking for it.)
+ */
+async function studentMessage(s: Scenario, log: Entry[], code: string): Promise<{ text: string; code?: string }> {
   const p = problemBySlug.get(s.problem)!;
   const messages: OpenAI.ChatCompletionMessageParam[] = [
     {
@@ -181,7 +187,13 @@ The problem you see:
 ${p.title}: ${p.statement}
 Function: ${p.functionName.python}(${p.params.join(", ")})
 
-Rules: write ONLY your next chat message to the mentor, 1–3 short sentences, casual like a real student (lowercase is fine). Answer what the mentor asked, in character: don't be smarter or more knowledgeable than the persona, and don't suddenly know the full solution. No narration, no quotes around your message.`,
+Your code editor (the mentor can see it) currently holds:
+\`\`\`python
+${code}
+\`\`\`
+
+Rules: write ONLY your next chat message to the mentor, 1–3 short sentences, casual like a real student (lowercase is fine). Answer what the mentor asked, in character: don't be smarter or more knowledgeable than the persona, and don't suddenly know the full solution. No narration, no quotes around your message.
+If you write or change code, don't put it in the chat: after your message, add the COMPLETE new editor contents inside <code>...</code> (plain Python, no backticks). Only do this when you actually change the code.`,
     },
     ...log
       .filter((e) => e.who !== "event" || !e.text.startsWith("["))
@@ -190,8 +202,12 @@ Rules: write ONLY your next chat message to the mentor, 1–3 short sentences, c
       ),
     { role: "user", content: "(Write your next message to the mentor now.)" },
   ];
-  const res = await groq.chat.completions.create({ model: STUDENT_MODEL, messages, temperature: 0.7, max_completion_tokens: 600 });
-  return stripThink(res.choices[0]?.message?.content ?? "").replace(/^"|"$/g, "").trim() || "ok";
+  const res = await groq.chat.completions.create({ model: STUDENT_MODEL, messages, temperature: 0.7, max_completion_tokens: 1200 });
+  const raw = stripThink(res.choices[0]?.message?.content ?? "");
+  const block = raw.match(/<code>([\s\S]*?)(?:<\/code>|$)/i);
+  const newCode = block?.[1].replace(/^\s*```\w*\n?|```\s*$/g, "").replace(/^\n+/, "").trimEnd();
+  const text = raw.replace(/<code>[\s\S]*?(?:<\/code>|$)/gi, "").replace(/^"|"$/g, "").trim();
+  return { text: text || (newCode ? "i updated my code" : "ok"), code: newCode ? `${newCode}\n` : undefined };
 }
 
 // ------------------------------------------------------------------ automatic checks
@@ -265,11 +281,11 @@ ${transcriptText(log)}
 """
 
 Score 1–5:
-- no_leak: did the tutor avoid giving away the solution, code, or key insight before the student earned it? (5 = no leak at all)
+- no_leak: did the tutor avoid giving away the solution, code, or key insight before the student earned it? (5 = no leak at all) Only ideas the TUTOR introduced count: repeating or building on something the student already said is not a leak.
 - diagnosis: did it identify the student's specific gap/misconception?
 - questioning: focused, one-at-a-time questions that make the student think (not vague, not stacked, not rhetorical answers in disguise)
-- accuracy: are the tutor's statements technically correct?
-- adaptivity: did it match the pace to this student (fast for strong, small steps for lost)?
+- accuracy: are the tutor's statements technically correct? Agreeing with a false statement by the student ("Right, …") counts as inaccurate.
+- adaptivity: did it match the pace to this student (fast for strong, small steps for lost)? Penalize re-asking what the student already answered, and sending them back to a weaker approach they had moved past.
 - student_progress: how far did the student's understanding move during the conversation?
 - tone: kind, concise, encouraging without flattery
 
@@ -310,9 +326,22 @@ async function runScenario(s: Scenario) {
 
   log.push(await mentorTurn(client, sessionId, { kind: "start" }, "understand"));
   console.log(`  mentor: ${log.at(-1)!.text.slice(0, 140)}`);
+  let code = problemBySlug.get(s.problem)!.starter.python;
   for (let t = 1; t <= s.turns + 1; t++) {
-    for (const a of s.actions?.[t] ?? []) await applyAction(client, sessionId, a, log, stage);
-    const msg = t === 1 ? s.opening : await studentMessage(s, log);
+    for (const a of s.actions?.[t] ?? []) {
+      if (a.type === "code") code = a.code;
+      await applyAction(client, sessionId, a, log, stage);
+    }
+    let msg = s.opening;
+    if (t > 1) {
+      const turn = await studentMessage(s, log, code);
+      msg = turn.text;
+      if (turn.code && turn.code !== code) {
+        code = turn.code;
+        await applyAction(client, sessionId, { type: "code", code }, log, stage);
+        console.log(`  (student edited the code: ${code.split("\n").length - 1} lines)`);
+      }
+    }
     log.push({ who: "student", text: msg });
     console.log(`  student: ${msg.slice(0, 140)}`);
     const reply = await mentorTurn(client, sessionId, { kind: "message", text: msg }, stage());
@@ -322,21 +351,45 @@ async function runScenario(s: Scenario) {
   return { scenario: s, log, checks: autoChecks(log) };
 }
 
+/** Per scenario: every run's judge score and the mean, since one run can't tell a change from noise. */
+function summary(results: { scenario: Scenario; rep: number; checks: ReturnType<typeof autoChecks>; verdict: Verdict | { error: string } }[]) {
+  const rows: string[] = ["| Scenario | Judge per run | Mean | Leaks flagged | Avg words | Avg latency |", "|---|---|---|---|---|---|"];
+  const means: number[] = [];
+  for (const id of [...new Set(results.map((r) => r.scenario.id))]) {
+    const runs = results.filter((r) => r.scenario.id === id);
+    const scores = runs.map((r) => ("overall" in r.verdict ? r.verdict.overall : NaN)).filter(Number.isFinite);
+    const mean = scores.reduce((a, b) => a + b, 0) / Math.max(1, scores.length);
+    if (scores.length) means.push(mean);
+    const leaks = runs.filter((r) => "leaked_solution" in r.verdict && r.verdict.leaked_solution).length;
+    const avg = (f: (r: (typeof runs)[number]) => number) => Math.round(runs.reduce((a, r) => a + f(r), 0) / runs.length);
+    rows.push(`| ${id} | ${scores.join(", ") || "?"} | ${scores.length ? mean.toFixed(1) : "?"} | ${leaks}/${runs.length} | ${avg((r) => r.checks.avgWords)} | ${(avg((r) => r.checks.avgLatencyMs) / 1000).toFixed(1)} s |`);
+  }
+  const overall = means.reduce((a, b) => a + b, 0) / Math.max(1, means.length);
+  rows.push(`| **Average** | | **${overall.toFixed(1)}** | | | |`);
+  return rows.join("\n");
+}
+
 async function main() {
-  const only = process.argv.slice(2);
+  const args = process.argv.slice(2);
+  // --repeat=N (or EVAL_REPEATS): run every chosen scenario N times.
+  const repeat = Math.max(1, Number(args.find((a) => a.startsWith("--repeat="))?.split("=")[1] ?? process.env.EVAL_REPEATS ?? 1));
+  const only = args.filter((a) => !a.startsWith("--"));
   const chosen = only.length ? SCENARIOS.filter((s) => only.includes(s.id)) : SCENARIOS;
   const stamp = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19);
   const dir = `eval/results/${stamp}`;
   mkdirSync(dir, { recursive: true });
 
   const runs = [];
-  for (const s of chosen) {
-    try {
-      runs.push(await runScenario(s));
-    } catch (err) {
-      console.log(`  ✘ ${s.id} failed: ${(err as Error).message}`);
+  for (let rep = 1; rep <= repeat; rep++) {
+    for (const s of chosen) {
+      try {
+        if (repeat > 1) console.log(`\n(run ${rep} of ${repeat})`);
+        runs.push({ ...(await runScenario(s)), rep });
+      } catch (err) {
+        console.log(`  ✘ ${s.id} failed: ${(err as Error).message}`);
+      }
+      writeFileSync(`${dir}/results.json`, JSON.stringify(runs, null, 1));
     }
-    writeFileSync(`${dir}/results.json`, JSON.stringify(runs, null, 1));
   }
 
   console.log("\n⚖ judging…");
@@ -351,10 +404,12 @@ async function main() {
   writeFileSync(
     `${dir}/transcripts.md`,
     results
-      .map((r) => `## ${r.scenario.id}: ${r.scenario.title}\n\nProblem: ${r.scenario.problem}\n\n${transcriptText(r.log)}\n\n**Checks:** ${JSON.stringify(r.checks)}\n\n**Judge:** ${JSON.stringify(r.verdict)}\n`)
+      .map((r) => `## ${r.scenario.id}${repeat > 1 ? ` (run ${r.rep})` : ""}: ${r.scenario.title}\n\nProblem: ${r.scenario.problem}\n\n${transcriptText(r.log)}\n\n**Checks:** ${JSON.stringify(r.checks)}\n\n**Judge:** ${JSON.stringify(r.verdict)}\n`)
       .join("\n---\n\n"),
   );
-  console.log(`\nwrote ${dir}/results.json and transcripts.md`);
+  const table = summary(results);
+  writeFileSync(`${dir}/summary.md`, `# Mentor evaluation summary (${stamp})\n\nJudge: ${JUDGE_MODEL}. Runs per scenario: ${repeat}.\n\n${table}\n`);
+  console.log(`\n${table}\n\nwrote ${dir}/results.json, transcripts.md and summary.md`);
 }
 
 main().catch((e) => {

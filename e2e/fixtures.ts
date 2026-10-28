@@ -59,6 +59,17 @@ export async function setCode(page: Page, code: string) {
   }, code);
 }
 
+/** Pastes text into the editor the way Ctrl+V does, so the editor's paste handler runs. */
+export async function pasteCode(page: Page, code: string) {
+  await page.evaluate((c) => {
+    type Ed = { focus(): void; trigger(source: string, handler: string, payload: unknown): void };
+    const m = (window as unknown as { monaco: { editor: { getEditors(): Ed[] } } }).monaco;
+    const editor = m.editor.getEditors()[0];
+    editor.focus();
+    editor.trigger("keyboard", "paste", { text: c });
+  }, code);
+}
+
 export async function getCode(page: Page) {
   return page.evaluate(() => {
     const m = (window as unknown as { monaco: { editor: { getModels(): { getValue(): string }[] } } }).monaco;

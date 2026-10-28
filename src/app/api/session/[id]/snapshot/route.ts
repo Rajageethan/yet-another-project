@@ -29,7 +29,8 @@ export async function POST(req: Request, ctx: RouteContext<"/api/session/[id]/sn
   await db.$transaction([
     db.session.update({
       where: { id: session.id },
-      data: { code, language, ...(pasted ? { pasteFlags: { increment: 1 } } : {}) },
+      // A paste stays flagged for the mentor until the student explains it (see updateStudentState).
+      data: { code, language, ...(pasted ? { pasteFlags: { increment: 1 }, pasteUnexplained: true } : {}) },
     }),
     db.codeSnapshot.create({ data: { sessionId: session.id, code, language, pasted } }),
     ...(event

@@ -63,11 +63,13 @@ problems a default onboarding can be assigned; add one if the default pick chang
   - The streamed reply is cut off at its first `?` outside code fences, or after about 110 words.
 - Context is kept small for Groq's free-tier token budgets: the system prompt (`prompt.ts`, built from the problem's `mentorNotes`, the current stage's guide in `stages.ts`, guidance style and running summary), plus the last `WINDOW` (10) messages after `session.summarizedCount`, plus a workspace block (line-numbered code and a diff against `session.lastMentorCode`). After each turn, older messages are folded into `session.summary` by the fast model (`maybeSummarize`, fire-and-forget).
 - `Message.role` is `user | assistant | event`. Events (test runs, pastes, submits) reach the model as `[Event] ...` user notes; consecutive user messages are merged.
+- **Student state** (`state.ts`): facts the mentor must not lose go into every prompt, not just the history. These are `Session.studentState` (false claims, insights and current approach, updated by the fast model after each student turn in `updateStudentState`) and `Session.pasteUnexplained` (set by the snapshot route on a paste, cleared once the student explains it).
+- Mentor replies run with `reasoning_effort: "high"` on gpt-oss (`GROQ_MENTOR_REASONING`); everything else uses low. `eval/replay.ts` measured this as the biggest single quality win.
 - Hint ladder (`HINT_LEVELS` in `prompt.ts`): each Hint press raises `hintsUsed` by one level. `hintPenalty` lowers the thinking score in `assess.ts`.
 
 ### LLM client (`src/lib/llm/groq.ts`)
 - `getLlm(user)` uses the user's own key (`groqKeyEnc`, AES-GCM with a key derived from `AUTH_SECRET` in `src/lib/crypto.ts`) or falls back to the shared `GROQ_API_KEY`. Only shared-key turns count toward `DAILY_TURN_CAP` (`UsageDay` table).
-- `withFallback` retries 429/5xx once, then moves to the next model, since each Groq model has its own rate budget. Model IDs come from env vars (`MODELS`). `gpt-oss` models get `reasoning_effort: "low"`.
+- `withFallback` retries 429/5xx once, then moves to the next model, since each Groq model has its own rate budget. Model IDs come from env vars (`MODELS`). `gpt-oss` models get `reasoning_effort: "low"`, except mentor replies (high).
 - Errors surface as `LlmError` with code `no_key | cap | rate_limit | upstream`. Inside the SSE stream they are sent as `{type:"error"}` events, because the HTTP status is already 200.
 
 ### Problems (`src/problems/`)

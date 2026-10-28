@@ -48,6 +48,7 @@ export function systemPrompt(opts: {
 - If they say they're lost, stuck or don't know: reassure them in one short sentence, then shrink the step. Ask one small, concrete question they can answer right now (e.g. "What should the function return for s = \"ab\", t = \"ba\"? Why?").
 - If they pasted code they didn't write, ask them to explain it line by line before moving on.
 - ${STYLE[guidanceStyle] ?? STYLE.balanced}
+- The student's latest message may end with "What the student has shown so far", notes the app keeps across the whole session. They take priority over the stage goal below: act on the first note before anything else.
 
 # Stages
 The session moves through: ${STAGES.map((s) => s.label).join(" → ")}.

@@ -1,13 +1,14 @@
 import "server-only";
 import type { ChatCompletionMessageParam } from "openai/resources/chat/completions";
 import { db } from "@/lib/db";
-import { LlmError, completeText, countTurn, getLlm, streamMentor } from "@/lib/llm/groq";
+import { LlmError, completeJson, completeText, countTurn, getLlm, streamMentor } from "@/lib/llm/groq";
 import type { AppUser } from "@/lib/session";
 import { getProblem } from "@/problems";
 import type { Session } from "@/generated/prisma/client";
 import { WINDOW, historyMessages, workspaceBlock } from "./context";
 import { HINT_LEVELS, hintInstruction, systemPrompt } from "./prompt";
 import { STAGE_IDS, nextStage, type StageId } from "./stages";
+import { applyUpdate, parseState, stateBlock } from "./state";
 
 export type MentorInput =
   | { kind: "start" }
@@ -119,12 +120,19 @@ async function runTurn(user: AppUser, session: Session, input: MentorInput, send
     select: { role: true, content: true, meta: true },
   });
 
-  const workspace = workspaceBlock({
-    code: session.code,
-    lastMentorCode: session.lastMentorCode,
-    language: session.language,
-    fileName: fileName(session.language),
-  });
+  // The student state rides with the code on the latest message: in the system prompt the stage goal
+  // won over it (the mentor went back to "restate the problem" with pasted code still unexplained).
+  const workspace = [
+    workspaceBlock({
+      code: session.code,
+      lastMentorCode: session.lastMentorCode,
+      language: session.language,
+      fileName: fileName(session.language),
+    }),
+    stateBlock(parseState(session.studentState), session.pasteUnexplained),
+  ]
+    .filter(Boolean)
+    .join("\n\n");
 
   const messages: ChatCompletionMessageParam[] = [
     {
@@ -175,6 +183,10 @@ async function runTurn(user: AppUser, session: Session, input: MentorInput, send
 
   // Fire-and-forget: the stream is already answered; the Node server keeps running this.
   void maybeSummarize(user, session.id).catch((e) => console.error("[summarize]", e));
+  // Only turns where the student said something can change what they've shown.
+  if (input.kind === "message" || input.kind === "retry") {
+    void updateStudentState(user, session.id).catch((e) => console.error("[student state]", e));
+  }
 }
 
 const STAGE_TAG = /^\s*\[\[\s*stage\s*:\s*([a-z _-]+?)\s*\]\]\s*/i;
@@ -184,7 +196,8 @@ const STAGE_TAG = /^\s*\[\[\s*stage\s*:\s*([a-z _-]+?)\s*\]\]\s*/i;
  * complete, parsed, and never shown to the student.
  */
 async function streamReply(llm: ReturnType<typeof getLlm>, messages: ChatCompletionMessageParam[], send: (e: MentorEvent) => void) {
-  const stream = await streamMentor(llm, { messages, temperature: 0.4, max_completion_tokens: 700 });
+  // Reasoning tokens count toward the completion limit, so leave room for them before the reply.
+  const stream = await streamMentor(llm, { messages, temperature: 0.4, max_completion_tokens: 2500 });
   let head = "";
   let decided = false;
   let stage: StageId | null = null;
@@ -286,4 +299,63 @@ async function maybeSummarize(user: AppUser, sessionId: string) {
   if (summary) {
     await db.session.update({ where: { id: sessionId }, data: { summary, summarizedCount: upTo } });
   }
+}
+
+/**
+ * Updates what the student has shown (false claims, insights, approach, whether pasted code is explained)
+ * from the latest exchange, so the next prompt carries it even after it scrolls out of the history.
+ */
+async function updateStudentState(user: AppUser, sessionId: string) {
+  const session = await db.session.findUnique({ where: { id: sessionId } });
+  if (!session) return;
+  const problem = getProblem(session.problemSlug);
+  const recent = await db.message.findMany({ where: { sessionId }, orderBy: { createdAt: "desc" }, take: 6 });
+  // The exchange since the mentor's previous reply: events, the student's message(s), the new reply.
+  const prevReply = recent.findIndex((m, i) => i > 0 && m.role === "assistant");
+  const exchange = recent
+    .slice(0, prevReply < 0 ? recent.length : prevReply + 1)
+    .reverse()
+    .map((m) => `${m.role === "assistant" ? "Mentor" : m.role === "event" ? "Event" : "Student"}: ${m.content}`)
+    .join("\n");
+  const prev = parseState(session.studentState);
+
+  const raw = await completeJson<Record<string, unknown>>(
+    getLlm(user),
+    {
+      messages: [
+        {
+          role: "system",
+          content: `You keep notes on a student in a DSA tutoring session, for the tutor. Update the notes from the latest exchange and return JSON with exactly these keys:
+- "falseClaims": false statements the student has made about the problem, its examples or complexity that they have NOT corrected yet (drop one as soon as they correct it). Short, in the student's words. At most 3. Questions, "I don't know" and uncertainty are not claims.
+- "insights": correct key ideas the student has voiced in their own words, most important first. Keep earlier ones unless superseded. At most 3.
+- "approach": the approach the student currently means to use, in a few words, or "" if none yet.
+- "pastedExplained": true only if the student has now explained in their own words both what the pasted code does and why it works (e.g. why that data structure, why it returns where it does); describing one line is not enough. Otherwise false.
+Judge correctness against the problem and its key insight below. Only record what the STUDENT said, never the tutor.
+
+Problem: ${problem.title}. ${problem.statement}
+Key insight: ${problem.mentorNotes.keyInsight}`,
+        },
+        {
+          role: "user",
+          content: `Current notes: ${JSON.stringify(prev)}
+Pasted code waiting for an explanation: ${session.pasteUnexplained ? "yes" : "no"}
+
+Latest exchange:
+${exchange}`,
+        },
+      ],
+      max_completion_tokens: 600,
+      temperature: 0.1,
+    },
+    "fast",
+  );
+  const next = applyUpdate(prev, raw);
+  await db.session.update({
+    where: { id: sessionId },
+    data: {
+      studentState: JSON.stringify(next),
+      // Only an explanation clears the flag; the snapshot route sets it on every paste.
+      ...(raw?.pastedExplained === true ? { pasteUnexplained: false } : {}),
+    },
+  });
 }

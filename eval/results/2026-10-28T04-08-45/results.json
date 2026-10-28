@@ -1,0 +1,323 @@
+[
+ {
+  "scenario": {
+   "id": "paster",
+   "title": "Pastes a full solution they don't understand",
+   "problem": "duplicate-finder",
+   "language": "python",
+   "persona": "A student who copied a working solution from a friend. You can't really explain why a set is used or what the complexity means beyond what the comments say. If pressed you give vague answers, but you're willing to learn if asked simple questions.",
+   "opening": "done, I have the solution in the editor, can I submit?",
+   "turns": 4,
+   "goodMentor": "Ask the student to explain the pasted code in their own words (why a set, why return early, what O(n) means) before moving on; don't approve it blindly.",
+   "actions": {
+    "1": [
+     {
+      "type": "code",
+      "code": "def has_duplicate(nums):\n    seen = set()\n    for x in nums:\n        if x in seen:\n            return True\n        seen.add(x)\n    return False\n# O(n) time, O(n) space\n# uses a hash set for membership\n",
+      "pastedLines": 10
+     }
+    ]
+   }
+  },
+  "log": [
+   {
+    "who": "mentor",
+    "kind": "start",
+    "text": "Hi! In your own words, what are the inputs, what should the function return, and what condition are we checking for the list `nums`?",
+    "stage": "understand",
+    "highlights": [],
+    "ms": 2023
+   },
+   {
+    "who": "event",
+    "text": "[pasted 10 lines]\ndef has_duplicate(nums):\n    seen = set()\n    for x in nums:\n        if x in seen:\n            return True\n        seen.add(x)\n    return False\n# O(n) time, O(n) space\n# uses a hash set for membership\n"
+   },
+   {
+    "who": "mentor",
+    "kind": "pasted",
+    "text": "Looking at line 4 (`if x in seen:`), can you describe what this line checks and why it’s crucial for detecting duplicates?",
+    "stage": "understand",
+    "highlights": [
+     {
+      "start": 4,
+      "end": 4
+     }
+    ],
+    "ms": 3566
+   },
+   {
+    "who": "student",
+    "text": "done, I have the solution in the editor, can I submit?"
+   },
+   {
+    "who": "mentor",
+    "kind": "message",
+    "text": "In line 6 (`seen.add(x)`), what does adding `x` to `seen` accomplish for the rest of the loop?",
+    "stage": "understand",
+    "highlights": [
+     {
+      "start": 6,
+      "end": 6
+     }
+    ],
+    "ms": 1960
+   },
+   {
+    "who": "student",
+    "text": "uh, it just puts the number into the set so if it shows up again later we can catch it?"
+   },
+   {
+    "who": "mentor",
+    "kind": "message",
+    "text": "At line 5 you `return True` when `x` is already in `seen`. Why is returning immediately here essential for the function’s result?",
+    "stage": "understand",
+    "highlights": [
+     {
+      "start": 5,
+      "end": 5
+     }
+    ],
+    "ms": 2222
+   },
+   {
+    "who": "student",
+    "text": "like if we find one duplicate we already know the answer is true, so we don't need to keep checking the rest?"
+   },
+   {
+    "who": "mentor",
+    "kind": "message",
+    "text": "What does line 2 (`seen = set()`) accomplish before the loop begins, and why is that initialization needed for detecting duplicates?",
+    "stage": "understand",
+    "highlights": [
+     {
+      "start": 2,
+      "end": 2
+     }
+    ],
+    "ms": 2004
+   },
+   {
+    "who": "student",
+    "text": "it creates an empty set so we have somewhere to keep track of the numbers we've already passed through, otherwise `seen.add` wouldn't have a place to go?"
+   },
+   {
+    "who": "mentor",
+    "kind": "message",
+    "text": "The comment on line 8 says `# O(n) time, O(n) space`. In your own words, what does that tell you about how the algorithm’s running time and memory usage grow with the size of `nums`?",
+    "stage": "understand",
+    "highlights": [
+     {
+      "start": 8,
+      "end": 8
+     }
+    ],
+    "ms": 2536
+   },
+   {
+    "who": "student",
+    "text": "honestly i just copied that part from the comments, i don't really know what the n stands for or what that means"
+   },
+   {
+    "who": "mentor",
+    "kind": "message",
+    "text": "What does the comment on line 8 (`# O(n) time, O(n) space`) tell you about how the work and memory of the algorithm grow as the input list gets larger?",
+    "stage": "understand",
+    "highlights": [
+     {
+      "start": 8,
+      "end": 8
+     }
+    ],
+    "ms": 2439
+   }
+  ],
+  "checks": {
+   "mentorReplies": 7,
+   "avgWords": 24,
+   "maxWords": 35,
+   "repliesWithoutQuestion": 0,
+   "repliesWithSeveralQuestions": 0,
+   "codeLikeReplies": 0,
+   "techniquesNamedFirst": [],
+   "stages": [
+    "understand"
+   ],
+   "highlightReplies": 6,
+   "errors": [],
+   "avgLatencyMs": 2393
+  },
+  "rep": 1,
+  "verdict": {
+   "scores": {
+    "no_leak": 5,
+    "diagnosis": 4,
+    "questioning": 4,
+    "accuracy": 5,
+    "adaptivity": 3,
+    "student_progress": 4,
+    "tone": 4
+   },
+   "overall": 7,
+   "leaked_solution": false,
+   "leak_quote": "",
+   "inaccuracies": [],
+   "best_moment": "In line 6 (`seen.add(x)`), what does adding `x` to `seen` accomplish for the rest of the loop?",
+   "worst_moment": "What does the comment on line 8 (`# O(n) time, O(n) space`) tell you about how the work and memory of the algorithm grow as the input list gets larger?",
+   "verdict": "The tutor effectively guided the student to understand the mechanics of the code by asking specific, line-by-line questions, preventing the student from blindly submitting. However, the tutor failed to adapt to the student's admitted lack of knowledge about Big O notation, repeating the same complex question instead of breaking it down into simpler concepts."
+  }
+ },
+ {
+  "scenario": {
+   "id": "paster",
+   "title": "Pastes a full solution they don't understand",
+   "problem": "duplicate-finder",
+   "language": "python",
+   "persona": "A student who copied a working solution from a friend. You can't really explain why a set is used or what the complexity means beyond what the comments say. If pressed you give vague answers, but you're willing to learn if asked simple questions.",
+   "opening": "done, I have the solution in the editor, can I submit?",
+   "turns": 4,
+   "goodMentor": "Ask the student to explain the pasted code in their own words (why a set, why return early, what O(n) means) before moving on; don't approve it blindly.",
+   "actions": {
+    "1": [
+     {
+      "type": "code",
+      "code": "def has_duplicate(nums):\n    seen = set()\n    for x in nums:\n        if x in seen:\n            return True\n        seen.add(x)\n    return False\n# O(n) time, O(n) space\n# uses a hash set for membership\n",
+      "pastedLines": 10
+     }
+    ]
+   }
+  },
+  "log": [
+   {
+    "who": "mentor",
+    "kind": "start",
+    "text": "Hi! In your own words, what should `has_duplicate` receive and return for a given list of integers?",
+    "stage": "understand",
+    "highlights": [],
+    "ms": 2197
+   },
+   {
+    "who": "event",
+    "text": "[pasted 10 lines]\ndef has_duplicate(nums):\n    seen = set()\n    for x in nums:\n        if x in seen:\n            return True\n        seen.add(x)\n    return False\n# O(n) time, O(n) space\n# uses a hash set for membership\n"
+   },
+   {
+    "who": "mentor",
+    "kind": "pasted",
+    "text": "In line 4 (`if x in seen:`), what is being checked and why is that check essential for detecting duplicates?",
+    "stage": "understand",
+    "highlights": [
+     {
+      "start": 4,
+      "end": 4
+     }
+    ],
+    "ms": 2592
+   },
+   {
+    "who": "student",
+    "text": "done, I have the solution in the editor, can I submit?"
+   },
+   {
+    "who": "mentor",
+    "kind": "message",
+    "text": "In line 4 (`if x in seen:`), what exactly is being checked and why is that check crucial for identifying a duplicate?",
+    "stage": "understand",
+    "highlights": [
+     {
+      "start": 4,
+      "end": 4
+     }
+    ],
+    "ms": 1840
+   },
+   {
+    "who": "student",
+    "text": "i honestly just copied this from a friend's code, so i don't really get the logic. what does that line actually do?"
+   },
+   {
+    "who": "mentor",
+    "kind": "message",
+    "text": "Line 4 checks whether the current number x is already in the set `seen`, meaning we have encountered it before; if so, we immediately return `True` because a duplicate exists, otherwise we continue scanning. What will `has_duplicate` return for the list `[1, 2, 3, 2]` and why?",
+    "stage": "understand",
+    "highlights": [
+     {
+      "start": 4,
+      "end": 4
+     }
+    ],
+    "ms": 3578
+   },
+   {
+    "who": "student",
+    "text": "oh right, it should return true because 2 shows up twice. so it finds the second 2 and just stops there?"
+   },
+   {
+    "who": "mentor",
+    "kind": "message",
+    "text": "Can you explain what each line of this code does?",
+    "stage": "understand",
+    "highlights": [],
+    "ms": 5755
+   },
+   {
+    "who": "student",
+    "text": "i only know the first line makes an empty set and the last one returns false if we finish the loop. the middle part is basically just checking and adding stuff, but i'm not sure why we need to check before adding?"
+   },
+   {
+    "who": "mentor",
+    "kind": "message",
+    "text": "If you added `x` to `seen` before checking `if x in seen:`, what would happen when you encounter the second `2` in `[1, 2, 3, 2]`?",
+    "stage": "understand",
+    "highlights": [],
+    "ms": 5924
+   },
+   {
+    "who": "student",
+    "text": "i guess it would just add it again and keep going? so it would never actually catch the duplicate and return false at the end?"
+   },
+   {
+    "who": "mentor",
+    "kind": "message",
+    "text": "If you added `x` to `seen` before checking `if x in seen:`, what would happen when you reach the second `2` in `[1, 2, 3, 2]`?",
+    "stage": "understand",
+    "highlights": [],
+    "ms": 6177
+   }
+  ],
+  "checks": {
+   "mentorReplies": 7,
+   "avgWords": 24,
+   "maxWords": 47,
+   "repliesWithoutQuestion": 0,
+   "repliesWithSeveralQuestions": 0,
+   "codeLikeReplies": 0,
+   "techniquesNamedFirst": [
+    "set"
+   ],
+   "stages": [
+    "understand"
+   ],
+   "highlightReplies": 3,
+   "errors": [],
+   "avgLatencyMs": 4009
+  },
+  "rep": 2,
+  "verdict": {
+   "scores": {
+    "no_leak": 3,
+    "diagnosis": 4,
+    "questioning": 3,
+    "accuracy": 5,
+    "adaptivity": 2,
+    "student_progress": 4,
+    "tone": 4
+   },
+   "overall": 6,
+   "leaked_solution": true,
+   "leak_quote": "Line 4 checks whether the current number x is already in the set seen, meaning we have encountered it before; if so, we immediately return True because a duplicate exists, otherwise we continue scanning.",
+   "inaccuracies": [],
+   "best_moment": "If you added x to seen before checking if x in seen:, what would happen when you encounter the second 2 in [1, 2, 3, 2]?",
+   "worst_moment": "If you added x to seen before checking if x in seen:, what would happen when you reach the second 2 in [1, 2, 3, 2]?",
+   "verdict": "The tutor effectively guided the student to understand the logic of the set and the importance of the check order, but failed to maintain the Socratic method by explicitly explaining the code's behavior after the student admitted to not understanding it. The final repetition of the previous question without acknowledging the student's correct answer was a significant adaptivity failure."
+  }
+ }
+]

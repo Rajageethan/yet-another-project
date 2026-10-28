@@ -1,4 +1,4 @@
-import { chat, currentStage, expect, send, setCode, signUp, test } from "./fixtures";
+import { chat, currentStage, expect, pasteCode, send, setCode, signUp, test, waitForEditor } from "./fixtures";
 
 // These run against the scripted mentor (src/lib/llm/fake.ts), so replies are predictable.
 test.describe("mentor chat", () => {
@@ -32,6 +32,18 @@ test.describe("mentor chat", () => {
     await expect(jump).toBeVisible();
     await expect(page.locator(".monaco-editor .mentor-line")).toHaveCount(1);
     await jump.click();
+  });
+
+  test("pasted code stays in front of the mentor on later turns", async ({ page }) => {
+    await waitForEditor(page);
+    await send(page, "anything pending? #state");
+    await expect(chat(page)).toContainText("Nothing pending from earlier.");
+    const pasted = Array.from({ length: 10 }, (_, i) => `// pasted line ${i + 1}`).join("\n");
+    await pasteCode(page, pasted);
+    await expect(chat(page)).toContainText("Walk me through line 2 of what you pasted");
+    // The paste event is now back in the history; the note the app keeps still tells the mentor.
+    await send(page, "can I submit now? #state");
+    await expect(chat(page)).toContainText("You pasted that code. What does line 2 do");
   });
 
   test("the hint button climbs the hint ladder", async ({ page }) => {

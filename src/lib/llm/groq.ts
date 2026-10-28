@@ -62,10 +62,16 @@ export async function countTurn(user: AppUser, llm: Llm) {
   }
 }
 
-/** Model-specific params: gpt-oss reasons, the Llama models reject reasoning params. */
-function tune<T extends { model: string }>(params: T): T {
+type Effort = "low" | "medium" | "high";
+
+// The mentor's replies are where reasoning pays off: in failure replays (eval/replay.ts) high effort fixed
+// half the bad replies for ~20% more tokens. Summaries, assessments and drafts stay on low.
+const MENTOR_EFFORT = (process.env.GROQ_MENTOR_REASONING || "high") as Effort;
+
+/** Model-specific params: gpt-oss reasons, other models reject reasoning params. */
+function tune<T extends { model: string }>(params: T, effort: Effort = "low"): T {
   if (params.model.startsWith("openai/gpt-oss")) {
-    return { ...params, reasoning_effort: "low" };
+    return { ...params, reasoning_effort: effort };
   }
   return params;
 }
@@ -131,7 +137,7 @@ type JsonParams = Omit<ChatCompletionCreateParamsNonStreaming, "model" | "stream
 
 export function streamMentor(llm: Llm, params: StreamParams) {
   return withFallback([MODELS.mentor, MODELS.fallback], (model) =>
-    llm.client.chat.completions.create(tune({ ...params, model, stream: true })),
+    llm.client.chat.completions.create(tune({ ...params, model, stream: true }, MENTOR_EFFORT)),
   );
 }
 

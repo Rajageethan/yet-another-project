@@ -33,7 +33,22 @@ and a note on what a good mentor does there (given to the judge).
    npx tsx eval/mentor-eval.ts lost buggy_code
    ```
 
-Results go to `eval/results/<timestamp>/results.json` and `transcripts.md`.
+   Add `--repeat=3` to run each scenario three times. A single run per scenario is too noisy to compare
+   two versions of the mentor.
+
+Results go to `eval/results/<timestamp>/`: `results.json`, `transcripts.md`, and `summary.md` (every run's
+judge score and the mean, per scenario).
+
+The simulated student writes code into the editor, as a real student would. It puts the whole file in
+`<code>…</code>`, which is saved as a snapshot, so the mentor sees it in the workspace and not in the chat.
+The judge counts only ideas the mentor introduced as leaks, not the student's own ideas repeated back.
+Rubric changes make scores before 2026-10-28 (afternoon) not directly comparable.
+
+## Failure replays (quick check, about 15 min)
+
+`npx tsx --conditions=react-server eval/replay.ts <results dir> [samples]` re-asks the moments where the
+mentor went wrong in a run, with the same context, under several configs (reasoning effort, model, a
+self-check). It calls Groq directly, so no server is needed. Use it to tell model limits from harness limits.
 
 Mentor calls are spaced `EVAL_MENTOR_GAP_MS` (default 30 s) apart to stay under Groq's free-tier
 8K tokens/min. Otherwise the app falls back to `gpt-oss-20b` and you'd be scoring a different model.
