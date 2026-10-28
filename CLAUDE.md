@@ -29,7 +29,20 @@ npm run problems            # python scripts/problems.py: verifies + regenerates
 python -I scripts/import_leetcode.py --per-topic 6   # see README "Importing more problems"
 ```
 
-There is no test suite. Verify changes with `typecheck`, `lint`, and by running the app.
+```bash
+npm test                    # Vitest unit tests (src/**/*.test.ts)
+npm run e2e                 # Playwright end-to-end suite (e2e/), scripted mentor, ~1.5 min
+npm run e2e:live            # one smoke test against the real Groq mentor (uses quota)
+npx playwright show-report  # HTML report of the last run
+```
+
+The Playwright suite builds its own production server (`next build && next start` on :3100, build folder
+`.next-e2e`, fresh `prisma/e2e.db` each run), so it can run alongside `npm run dev`. It sets
+`E2E_TEST_SERVER=1`, which is what allows the dev login in that production build, and `E2E_FAKE_LLM=1`,
+which swaps Groq for the scripted client in `src/lib/llm/fake.ts`. Test messages can steer that client with
+`#advance`, `#line`, `#slow` and `FAIL_ONCE`. Neither flag is set anywhere else; never set them in a real
+deployment. Each test signs up its own student (`e2e/fixtures.ts`). Reference solutions there cover the
+problems a default onboarding can be assigned; add one if the default pick changes.
 
 ## Architecture
 

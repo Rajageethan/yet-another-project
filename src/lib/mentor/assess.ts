@@ -22,7 +22,8 @@ type Raw = Partial<Record<RubricKey, number>> & {
   wentWell?: string;
   workOn?: string;
   patternCard?: string;
-  complexity?: string;
+  /** Final time/space complexity text. Not named "complexity": that key is the 1–5 rubric score. */
+  bigO?: string;
 };
 
 const clamp5 = (n: unknown) => Math.min(5, Math.max(1, Math.round(Number(n) || 3)));
@@ -52,7 +53,7 @@ Return JSON only:
 "wentWell":"one or two sentences, second person, specific to this session",
 "workOn":"one or two sentences, second person, the single most useful habit to build next",
 "patternCard":"one sentence capturing the reusable technique (no code)",
-"complexity":"final time · space, e.g. O(n) time · O(k) space"}`,
+"bigO":"final time · space, e.g. O(n) time · O(k) space"}`,
         },
         {
           role: "user",
@@ -85,6 +86,6 @@ ${numbered(session.code)}`,
     workOn: String(raw.workOn ?? "Talk through your approach with the mentor before coding next time.").slice(0, 400),
     patternName: problem.pattern,
     patternCard: String(raw.patternCard ?? problem.mentorNotes.keyInsight).slice(0, 300),
-    complexityStr: String(raw.complexity ?? "").slice(0, 80) || null,
+    complexityStr: String(raw.bigO ?? "").slice(0, 80) || null,
   };
 }

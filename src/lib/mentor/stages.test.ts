@@ -11,9 +11,16 @@ describe("nextStage", () => {
     expect(nextStage("code", "understand", true)).toBe("code");
   });
 
-  it("moves forward at most one stage", () => {
-    expect(nextStage("understand", "brute_force", false)).toBe("examples");
+  it("jumps forward to where the student already is, up to code", () => {
     expect(nextStage("understand", "examples", false)).toBe("examples");
+    expect(nextStage("understand", "optimize", false)).toBe("optimize");
+    expect(nextStage("examples", "code", false)).toBe("code");
+  });
+
+  it("moves past code one stage at a time", () => {
+    expect(nextStage("understand", "reflect", false)).toBe("code");
+    expect(nextStage("code", "reflect", false)).toBe("test");
+    expect(nextStage("test", "reflect", false)).toBe("complexity");
   });
 
   it("allows moving back any distance", () => {
@@ -21,6 +28,6 @@ describe("nextStage", () => {
   });
 
   it("treats an unknown current stage as understand", () => {
-    expect(nextStage("bogus", "code", false)).toBe("examples");
+    expect(nextStage("bogus", "complexity", false)).toBe("code");
   });
 });

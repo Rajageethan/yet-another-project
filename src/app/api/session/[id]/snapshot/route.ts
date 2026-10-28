@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
+import { interruptGapElapsed } from "@/lib/mentor/engine";
+import { pasteEventContent } from "@/lib/mentor/paste";
 import { getOwnedSession } from "@/lib/session";
 
 const MAX_CODE = 20_000;
@@ -23,24 +25,22 @@ export async function POST(req: Request, ctx: RouteContext<"/api/session/[id]/sn
     return NextResponse.json({ ok: true, changed: false });
   }
 
+  const event = pasted ? pasteEventContent(pastedLines) : undefined;
   await db.$transaction([
     db.session.update({
       where: { id: session.id },
       data: { code, language, ...(pasted ? { pasteFlags: { increment: 1 } } : {}) },
     }),
     db.codeSnapshot.create({ data: { sessionId: session.id, code, language, pasted } }),
-    ...(pasted
+    ...(event
       ? [
           db.message.create({
-            data: {
-              sessionId: session.id,
-              role: "event",
-              content: `The student pasted ${pastedLines} lines of code into the editor at once.`,
-            },
+            data: { sessionId: session.id, role: "event", content: event, meta: JSON.stringify({ paste: pastedLines }) },
           }),
         ]
       : []),
   ]);
 
-  return NextResponse.json({ ok: true, changed: true });
+  // The mentor asks about a paste even with "Mentor can interrupt" off (that toggle is about failed runs).
+  return NextResponse.json({ ok: true, changed: true, event, followUp: pasted && interruptGapElapsed(session) });
 }

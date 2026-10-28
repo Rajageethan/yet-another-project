@@ -5,6 +5,7 @@ import { decrypt } from "@/lib/crypto";
 import { db } from "@/lib/db";
 import { dayKey } from "@/lib/dates";
 import type { AppUser } from "@/lib/session";
+import { fakeClient, fakeLlmEnabled } from "./fake";
 
 const BASE_URL = "https://api.groq.com/openai/v1";
 
@@ -27,6 +28,8 @@ export class LlmError extends Error {
 export type Llm = { client: OpenAI; shared: boolean };
 
 export function getLlm(user: AppUser): Llm {
+  // Playwright suite only (E2E_FAKE_LLM=1, never in production): scripted replies, no network.
+  if (fakeLlmEnabled) return { client: fakeClient(), shared: false };
   if (user.groqKeyEnc) {
     try {
       return { client: new OpenAI({ apiKey: decrypt(user.groqKeyEnc), baseURL: BASE_URL, maxRetries: 0 }), shared: false };

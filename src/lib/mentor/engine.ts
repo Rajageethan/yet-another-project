@@ -30,16 +30,33 @@ export const fileName = (language: string) => (language === "javascript" ? "solu
 
 const INTERRUPT_GAP_MS = 90_000;
 
-export function canInterrupt(user: AppUser, session: Session) {
-  if (!user.mentorInterrupt) return false;
+/** Unprompted turns (failed-run and paste follow-ups) share one rate limit. */
+export function interruptGapElapsed(session: Pick<Session, "lastInterruptAt">) {
   return !session.lastInterruptAt || Date.now() - session.lastInterruptAt.getTime() > INTERRUPT_GAP_MS;
+}
+
+export function canInterrupt(user: AppUser, session: Session) {
+  return user.mentorInterrupt && interruptGapElapsed(session);
 }
 
 export function mentorStream(user: AppUser, session: Session, input: MentorInput) {
   const encoder = new TextEncoder();
+  // The student may reload or leave mid-reply. Writing to the closed stream would throw and abort the
+  // turn before the reply is saved, so stop writing but finish the turn: the reply is there on reload.
+  let open = true;
   return new ReadableStream<Uint8Array>({
+    cancel() {
+      open = false;
+    },
     async start(controller) {
-      const send = (e: MentorEvent) => controller.enqueue(encoder.encode(`data: ${JSON.stringify(e)}\n\n`));
+      const send = (e: MentorEvent) => {
+        if (!open) return;
+        try {
+          controller.enqueue(encoder.encode(`data: ${JSON.stringify(e)}\n\n`));
+        } catch {
+          open = false;
+        }
+      };
       try {
         await runTurn(user, session, input, send);
       } catch (err) {
@@ -49,7 +66,7 @@ export function mentorStream(user: AppUser, session: Session, input: MentorInput
         else console.error("[mentor]", err);
         send({ type: "error", message: e.message, code: e.code });
       } finally {
-        controller.close();
+        if (open) controller.close();
       }
     },
   });
@@ -84,6 +101,10 @@ async function runTurn(user: AppUser, session: Session, input: MentorInput, send
     session = await db.session.update({ where: { id: session.id }, data: { lastInterruptAt: new Date() } });
     instruction =
       "You are speaking up unprompted because the student's test run just failed (see the latest event). If the failure points to a specific mistake, ask one pointed question about it (name the line number if a line is clearly involved). Keep it to 1–3 sentences. Do not give the fix.";
+  } else if (input.kind === "pasted") {
+    session = await db.session.update({ where: { id: session.id }, data: { lastInterruptAt: new Date() } });
+    instruction =
+      "You are speaking up unprompted because the student just pasted a block of code (see the latest event). Ask them to explain the pasted code in their own words, starting with the line that does the key work (name its line number). Keep it to 1–2 sentences. Don't say whether it is correct and don't give the fix.";
   } else if (input.kind === "retry") {
     // The previous reply failed (rate limit, network). Answer the existing conversation again.
     const last = await db.message.findFirst({ where: { sessionId: session.id }, orderBy: { createdAt: "desc" } });

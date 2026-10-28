@@ -10,8 +10,9 @@ declare module "next-auth" {
   }
 }
 
+/** Dev login: development only, or the Playwright suite's own production build (E2E_TEST_SERVER=1). */
 export const devLoginEnabled =
-  process.env.AUTH_DEV_LOGIN === "true" && process.env.NODE_ENV !== "production";
+  process.env.AUTH_DEV_LOGIN === "true" && (process.env.NODE_ENV !== "production" || process.env.E2E_TEST_SERVER === "1");
 
 const providers: NextAuthConfig["providers"] = [];
 if (process.env.AUTH_GOOGLE_ID) providers.push(Google);

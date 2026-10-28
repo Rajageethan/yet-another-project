@@ -8,7 +8,7 @@ export async function POST(req: Request, ctx: RouteContext<"/api/session/[id]/ch
   if (!owned) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
   const body = (await req.json().catch(() => null)) as MentorInput | null;
-  const kinds = ["start", "message", "hint", "run_failed", "retry"];
+  const kinds = ["start", "message", "hint", "run_failed", "pasted", "retry"];
   if (!body || !kinds.includes(body.kind)) {
     return NextResponse.json({ error: "Bad request" }, { status: 400 });
   }

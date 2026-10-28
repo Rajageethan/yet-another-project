@@ -15,7 +15,7 @@ export const STAGES = [
     id: "brute_force",
     label: "Brute force",
     guide:
-      "Get the simplest correct approach stated in plain words, plus its time and space complexity. It's fine if it's slow. Don't let them skip this.",
+      "Get the simplest correct approach stated in plain words, plus its time and space complexity. It's fine if it's slow. If they already have a correct faster idea, a one-line brute force with its complexity is enough; never make them code it.",
   },
   {
     id: "optimize",
@@ -56,14 +56,18 @@ export function stageIndex(id: string) {
   return Math.max(0, STAGE_IDS.indexOf(id as StageId));
 }
 
+const CODE_INDEX = STAGE_IDS.indexOf("code");
+
 /**
- * The stage after a mentor turn. Unprompted turns (failed-run or paste follow-ups) never move it;
- * otherwise it may go back freely but forward only one stage, so the bar can't skip ahead.
+ * The stage after a mentor turn. Unprompted turns (failed-run or paste follow-ups) never move it.
+ * Otherwise it may go back freely and jump forward to wherever the student already is (a strong
+ * student shouldn't be dragged through stages they've shown), but only up to Code: the stages after
+ * it need working code, so the bar moves through them one at a time.
  */
 export function nextStage(current: string, proposed: StageId | null, unprompted: boolean): StageId {
   const from = stageIndex(current);
   if (!proposed || unprompted) return STAGE_IDS[from];
-  return STAGE_IDS[Math.min(stageIndex(proposed), from + 1)];
+  return STAGE_IDS[Math.min(stageIndex(proposed), Math.max(from + 1, CODE_INDEX))];
 }
 
 export function getStage(id: string) {

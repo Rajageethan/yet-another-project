@@ -27,6 +27,7 @@ type MentorInput =
   | { kind: "message"; text: string }
   | { kind: "hint" }
   | { kind: "run_failed" }
+  | { kind: "pasted" }
   | { kind: "retry" };
 type Editor = Parameters<OnMount>[0];
 type Monaco = Parameters<OnMount>[1];
@@ -95,6 +96,8 @@ export function Workspace(props: {
   const codeByLang = useRef<Partial<Record<Language, string>>>({ [initial.language]: initial.code });
   const lastSent = useRef({ code: initial.code, language: initial.language });
   const pendingPaste = useRef(0);
+  // askMentor depends on flushSnapshot, so snapshots reach it through a ref.
+  const askMentorRef = useRef<((input: MentorInput) => Promise<void>) | null>(null);
   const snapshotTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const busyRef = useRef(false);
   const chatEnd = useRef<HTMLDivElement | null>(null);
@@ -111,12 +114,15 @@ export function Workspace(props: {
     pendingPaste.current = 0;
     lastSent.current = current;
     try {
-      await fetch(`/api/session/${sessionId}/snapshot`, {
+      const res = (await fetch(`/api/session/${sessionId}/snapshot`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...current, pastedLines }),
-      });
+      }).then((x) => x.json())) as { event?: string; followUp?: boolean };
       setSyncedAt(Date.now());
+      if (res.event) setMessages((m) => [...m, { id: `ev-${Date.now()}`, role: "event", content: res.event! }]);
+      // Skipped while the mentor is mid-reply; that reply already sees the paste event.
+      if (res.followUp) void askMentorRef.current?.({ kind: "pasted" });
     } catch {
       lastSent.current = { code: "", language }; // retry next time
     }
@@ -235,6 +241,10 @@ export function Workspace(props: {
     },
     [sessionId, flushSnapshot],
   );
+
+  useEffect(() => {
+    askMentorRef.current = askMentor;
+  }, [askMentor]);
 
   // The mentor opens the session. Deferred so a StrictMode double-mount cancels the first call.
   useEffect(() => {
